@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import axios from "axios";
 
-function App() {
+const App = async () => {
+
+  const post = async () => {
+    await axios.post("http://localhost:3000/walking", {
+      date: Date.now(),
+      distance: 11111,
+    });
+  };
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={post}>2141234</button>
     </div>
   );
-}
+};
 
 export default App;
