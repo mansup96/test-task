@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import icon from "../../../static/icons/sortBtn--active--rise.svg";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import icon from '../../../static/icons/sortBtn--active--rise.svg';
 
 const StyledElement = styled.div`
   display: flex;
@@ -25,17 +25,33 @@ const StyledElement = styled.div`
   img {
     cursor: pointer;
     margin-left: 7px;
-    opacity: ${props => (props.active ? 0.3 : 1)};
-    transform: ${props => (props.order === "desc" ? "rotateX(180deg)" : null)};
+    opacity: ${props => (props.isActive ? 1 : 0.3)};
+    transform: ${props =>
+      props.localSortOrder === 'desc' ? 'rotateX(180deg)' : null};
     transition: transform ${({ theme }) => theme.defaultTransition};
   }
 `;
 
-const SortElement = props => {
+const SortElement = ({ label, onOrderChange, setAsActive, ...props }) => {
+  const [localSortOrder, setLocalSortOrder] = useState(props.sortOrder);
+
+  useEffect(() => {
+    if (props.isActive && localSortOrder !== props.sortOrder) {
+      onOrderChange(localSortOrder);
+    }
+  });
+
+  const changeSortOrder = () => {
+    if (props.isActive) {
+      onOrderChange(props.sortOrder === 'asc' ? 'desc' : 'asc');
+      setLocalSortOrder(props.sortOrder === 'asc' ? 'desc' : 'asc');
+    }
+  };
+
   return (
-    <StyledElement {...props}>
-      <span onClick={props.onActiveChange}>{props.label}</span>
-      <img onClick={props.onOrderChange} src={icon} alt="arrow" />
+    <StyledElement {...props} localSortOrder={localSortOrder}>
+      <span onClick={setAsActive}>{label}</span>
+      <img onClick={changeSortOrder} src={icon} alt="arrow" />
     </StyledElement>
   );
 };

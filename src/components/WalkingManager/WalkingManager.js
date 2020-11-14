@@ -1,18 +1,27 @@
-import React from "react";
-import styled from "styled-components";
-import Button from "../Button/Button";
-import ManagerHeader from "./ManagerHeader/ManagerHeader";
+import React from 'react';
+import styled from 'styled-components';
+import Button from '../common/Button/Button';
+import ManagerHeader from './ManagerHeader/ManagerHeader';
+import { connect } from 'react-redux';
+import { setSortParams } from '../../store/managerReducer';
+
+const ManagerWrapper = styled.div``;
 
 const WalkingManager = props => {
   return (
-    <div>
-      <ManagerHeader />
+    <ManagerWrapper {...props}>
+      <ManagerHeader
+        sortParams={props.managerState.sortParams}
+        onChange={props.setSortParams}
+      />
       {/*<Table />*/}
       <Button> Добавить запись </Button>
-    </div>
+    </ManagerWrapper>
   );
 };
 
-const styledManager = styled(WalkingManager)``;
+const mapStateToProps = state => ({
+  managerState: state.managerReducer,
+});
 
-export default styledManager;
+export default connect(mapStateToProps, { setSortParams })(WalkingManager);

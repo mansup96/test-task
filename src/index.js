@@ -1,13 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import { GlobalStyle } from "./styles";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { Provider } from 'react-redux';
+import { GlobalStyle } from './styles';
+import store from './store';
 
 const Root = () => (
   <React.Fragment>
     <GlobalStyle />
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.Fragment>
 );
 
-ReactDOM.render(<Root />, document.getElementById("root"));
+window.store = store
+
+ReactDOM.render(<Root />, document.getElementById('root'));

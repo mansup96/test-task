@@ -1,10 +1,10 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react';
+import styled, { css } from 'styled-components';
 
 const StyledSection = styled.section`
   max-width: 100%;
   background-color: ${({ theme }) => theme.white};
-  .container {
+  & > .container {
     max-width: 1168px;
     margin: 0 auto;
     display: flex;

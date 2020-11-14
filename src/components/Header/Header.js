@@ -1,14 +1,12 @@
-import React from "react";
-import axios from "axios";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import { string } from 'prop-types';
 
-const Header = ({ className, title }) => {
-  return (
-    <header className={className}>
-      <h1 className="title">{title}</h1>
-    </header>
-  );
-};
+const Header = ({ className, title }) => (
+  <header className={className}>
+    <h1 className="title">{title}</h1>
+  </header>
+);
 
 const StyledHeader = styled(Header)`
   width: 100%;
@@ -25,5 +23,10 @@ const StyledHeader = styled(Header)`
     line-height: 31px;
   }
 `;
+
+Header.propTypes = {
+  className: string.isRequired,
+  title: string.isRequired,
+};
 
 export default StyledHeader;

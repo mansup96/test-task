@@ -7,16 +7,18 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
     "react-scripts": "4.0.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.1",
     "styled-normalize": "^8.0.7",
     "web-vitals": "^0.2.4"
   },
   "devDependencies": {
-    "eslint": "^6.6.0",
-    "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^1.7.0"
   },
   "scripts": {
@@ -29,7 +31,15 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "arrow-parens": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -44,6 +54,7 @@
     ]
   },
   "prettier": {
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "singleQuote": true
   }
 }
