@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./components/Header/Header";
 import { ThemeProvider } from "styled-components";
 import Section from "./components/Section/Section";
-import Button from "./components/Button/Button";
+import WalkingManager from "./components/WalkingManager/WalkingManager";
 
 const theme = {
   main: "#1C2025",
@@ -12,14 +12,15 @@ const theme = {
   white: "#FFFFFF",
   sans: "PT Sans, sans-serif",
   sansCaption: "PT Sans Caption, sans-serif",
+  defaultTransition: "0.2s ease",
 };
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Header title="Шагомер на тестовое задание" />
-      <Section>
-        <Button/>
+      <Section row>
+        <WalkingManager />
       </Section>
     </ThemeProvider>
   );

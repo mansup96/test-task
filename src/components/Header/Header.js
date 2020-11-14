@@ -12,13 +12,13 @@ const Header = ({ className, title }) => {
 
 const StyledHeader = styled(Header)`
   width: 100%;
-  background-color: ${(props) => props.theme.main};
+  background-color: ${props => props.theme.main};
   padding: 15px 20px;
   margin-bottom: 100px;
   & .title {
     margin: 0;
-    color: ${(props) => props.theme.white};
-    font-family: ${(props) => props.theme.sansCaption}, sans-serif;
+    color: ${props => props.theme.white};
+    font-family: ${props => props.theme.sansCaption}, sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
