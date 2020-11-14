@@ -4,32 +4,32 @@ import SortElement from '../../common/SortElement/SortElement';
 
 const ManagerHeaderWrapper = styled.div`
   background-color: ${({ theme }) => theme.main};
-  padding: 16px 11px;
+  padding: 11px 16px;
   display: flex;
 `;
 
 const ManagerHeader = ({ sortParams, onChange, ...props }) => {
   const setSortBy = value => {
-    onChange({ ...sortParams, sortBy: value });
+    onChange({ ...sortParams, _sort: value });
   };
 
   const setSortOrder = value => {
-    onChange({ ...sortParams, sortOrder: value });
+    onChange({ ...sortParams, _order: value });
   };
 
   return (
     <ManagerHeaderWrapper {...props}>
       <SortElement
         label="Дата"
-        isActive={sortParams.sortBy === 'date'}
-        sortOrder={sortParams.sortOrder}
+        isActive={sortParams._sort === 'date'}
+        _order={sortParams._order}
         setAsActive={() => setSortBy('date')}
         onOrderChange={setSortOrder}
       />
       <SortElement
         label="Дистанция"
-        isActive={sortParams.sortBy === 'distance'}
-        sortOrder={sortParams.sortOrder}
+        isActive={sortParams._sort === 'distance'}
+        _order={sortParams._order}
         setAsActive={() => setSortBy('distance')}
         onOrderChange={setSortOrder}
       />

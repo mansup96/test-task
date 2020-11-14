@@ -10,6 +10,7 @@ const theme = {
   accentHover: '#d4295b',
   gray: '#EFEFF0',
   white: '#FFFFFF',
+  fontGray: '#A4A6A8',
   sans: 'PT Sans, sans-serif',
   sansCaption: 'PT Sans Caption, sans-serif',
   defaultTransition: '0.2s ease',

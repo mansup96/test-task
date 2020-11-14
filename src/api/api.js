@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 let $axios = axios.create({
-  baseURL: 'localhost:3000/',
+  baseURL: 'http://localhost:3000/walking',
 });
 
 export const api = {
-  getWalks() {
-    return $axios.get('').then(resp => resp.data);
+  getWalks(query) {
+    return $axios
+      .get(`/${query}`)
+      .then(resp => resp.data)
+      .catch(err => err);
   },
 };

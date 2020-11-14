@@ -12,6 +12,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   transition: background-color ${({ theme }) => theme.defaultTransition};
   padding: 21px 92px;
+  width: ${props => (props.fullWidth ? '100%' : null)};
   max-width: 100%;
 
   &:hover {
@@ -19,9 +20,9 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ onClick, children }) => {
+const Button = ({ onClick, children, ...props }) => {
   return (
-    <StyledButton onClick={onClick} type="button">
+    <StyledButton {...props} onClick={onClick} type="button">
       {children}
     </StyledButton>
   );

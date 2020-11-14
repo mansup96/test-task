@@ -23,6 +23,8 @@ const StyledElement = styled.div`
   }
 
   img {
+    width: 14px;
+    height: 14px;
     cursor: pointer;
     margin-left: 7px;
     opacity: ${props => (props.isActive ? 1 : 0.3)};
@@ -33,18 +35,18 @@ const StyledElement = styled.div`
 `;
 
 const SortElement = ({ label, onOrderChange, setAsActive, ...props }) => {
-  const [localSortOrder, setLocalSortOrder] = useState(props.sortOrder);
+  const [localSortOrder, setLocalSortOrder] = useState(props._order);
 
   useEffect(() => {
-    if (props.isActive && localSortOrder !== props.sortOrder) {
+    if (props.isActive && localSortOrder !== props._order) {
       onOrderChange(localSortOrder);
     }
   });
 
   const changeSortOrder = () => {
     if (props.isActive) {
-      onOrderChange(props.sortOrder === 'asc' ? 'desc' : 'asc');
-      setLocalSortOrder(props.sortOrder === 'asc' ? 'desc' : 'asc');
+      onOrderChange(props._order === 'asc' ? 'desc' : 'asc');
+      setLocalSortOrder(props._order === 'asc' ? 'desc' : 'asc');
     }
   };
 
