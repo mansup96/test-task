@@ -1,22 +1,28 @@
 import React from "react";
-import "./App.css";
-import axios from "axios";
+import Header from "./components/Header/Header";
+import { ThemeProvider } from "styled-components";
+import Section from "./components/Section/Section";
+import Button from "./components/Button/Button";
 
-const App = async () => {
-
-  const post = async () => {
-    await axios.post("http://localhost:3000/walking", {
-      date: Date.now(),
-      distance: 11111,
-    });
-  };
-
-
-  return (
-    <div className="App">
-      <button onClick={post}>2141234</button>
-    </div>
-  );
+const theme = {
+  main: "#1C2025",
+  accent: "#EC174F",
+  accentHover: "#d4295b",
+  gray: "#EFEFF0",
+  white: "#FFFFFF",
+  sans: "PT Sans, sans-serif",
+  sansCaption: "PT Sans Caption, sans-serif",
 };
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <Header title="Шагомер на тестовое задание" />
+      <Section>
+        <Button/>
+      </Section>
+    </ThemeProvider>
+  );
+}
 
 export default App;

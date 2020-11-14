@@ -1,6 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
+import { GlobalStyle } from "./styles";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const Root = () => (
+  <React.Fragment>
+    <GlobalStyle />
+    <App />
+  </React.Fragment>
+);
+
+ReactDOM.render(<Root />, document.getElementById("root"));
