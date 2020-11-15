@@ -99,7 +99,7 @@ const getWalks = () => async (dispatch, getState) => {
       dispatch(setWalks(transformedData));
     })
     .catch(err => {
-      // console.log(err);
+      console.log(err);
       dispatch(setError('Ошибка'));
     });
 
@@ -118,10 +118,36 @@ export const handleBadge = (isOpen, id) => (dispatch, getState) => {
     const activeWalk = getState().managerReducer.walks.find(
       walk => walk.id === id
     );
-    dispatch(setActiveWalk(JSON.parse(JSON.stringify(activeWalk)) || null));
+    if (activeWalk) {
+      dispatch(setActiveWalk(JSON.parse(JSON.stringify(activeWalk))));
+    } else {
+      dispatch(setActiveWalk(null));
+    }
   }
 
   dispatch(setBadgeMode(isOpen));
+};
+
+export const handleWalk = (walk, id) => dispatch => {
+  if (id) {
+    api.putWalk(walk, id).then(resp => {
+      dispatch(fetchWalks());
+    });
+  } else {
+    api.postWalk(walk).then(resp => {
+      console.log(resp);
+      dispatch(fetchWalks());
+    });
+  }
+};
+
+export const removeWalk = id => dispatch => {
+  if (id) {
+    api.deleteWalk(id).then(resp => {
+      dispatch(fetchWalks());
+      dispatch(setBadgeMode(false));
+    });
+  }
 };
 
 export default managerReducer;

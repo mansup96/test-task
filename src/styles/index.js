@@ -25,3 +25,28 @@ export const scrollBarStyle = () => css`
     background: ${({ theme }) => theme.accentHover};
   }
 `;
+
+export const fontStyle = (fontSize, color, underline) => css`
+  font-family: ${({ theme }) => theme.sans};
+  font-style: normal;
+  font-weight: normal;
+  font-size: ${fontSize};
+  line-height: 12px;
+  color: ${color};
+
+  ${underline &&
+  css`
+    position: relative;
+    width: fit-content;
+
+    &:after {
+      content: '';
+      bottom: 1px;
+      left: 0;
+      background-color: ${color};
+      position: absolute;
+      width: 100%;
+      height: 1px;
+    }
+  `}
+`;

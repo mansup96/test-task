@@ -1,27 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
-import { scrollBarStyle } from '../../../styles';
-
-const fontStyle = (fontSize, color) => css`
-  font-family: ${({ theme }) => theme.sans};
-  font-style: normal;
-  font-weight: normal;
-  font-size: ${fontSize};
-  line-height: 12px;
-  color: ${color};
-  position: relative;
-  width: fit-content;
-
-  &:after {
-    content: '';
-    bottom: 1px;
-    left: 0;
-    background-color: ${color};
-    position: absolute;
-    width: 100%;
-    height: 1px;
-  }
-`;
+import {fontStyle, scrollBarStyle} from '../../../styles';
 
 const StyledTable = styled.ul`
   height: 480px;
@@ -60,16 +39,16 @@ const StyledTable = styled.ul`
     }
 
     .day {
-      ${({ theme }) => fontStyle('9px', theme.fontGray)}
+      ${({ theme }) => fontStyle('9px', theme.fontGray, true)}
     }
 
     .date {
-      ${({ theme }) => fontStyle('12px', theme.main)}
+      ${({ theme }) => fontStyle('12px', theme.main, true)}
     }
   }
 
   .distance {
-    ${({ theme }) => fontStyle('12px', theme.main)}
+    ${({ theme }) => fontStyle('12px', theme.main, true)}
   }
 
   ${scrollBarStyle()}
