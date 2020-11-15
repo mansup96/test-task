@@ -14,6 +14,7 @@ const Root = () => (
   </React.Fragment>
 );
 
-window.store = store
+// @ts-ignore
+window.store = store;
 
 ReactDOM.render(<Root />, document.getElementById('root'));

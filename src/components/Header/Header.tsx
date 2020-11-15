@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { string } from 'prop-types';
 
 const Header = ({ className, title }) => (
   <header className={className}>
@@ -23,10 +22,5 @@ const StyledHeader = styled(Header)`
     line-height: 31px;
   }
 `;
-
-Header.propTypes = {
-  className: string.isRequired,
-  title: string.isRequired,
-};
 
 export default StyledHeader;

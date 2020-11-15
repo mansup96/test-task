@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import Button from '../common/Button/Button';
+import {Button} from '../common/Button/Button';
 import ManagerHeader from './ManagerHeader/ManagerHeader';
 import { connect } from 'react-redux';
 import {

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
+interface StyledButtonProps extends ButtonProps {
+  ref: React.ReactNode;
+}
+
+const StyledButton = styled.button<StyledButtonProps>`
   background-color: ${props => props.theme.accent};
   font-family: ${props => props.theme.sansCaption};
   color: ${props => props.theme.white};
@@ -15,9 +19,9 @@ const StyledButton = styled.button`
   width: ${props => (props.fullWidth ? '100%' : props.square ? '16px' : null)};
   height: ${props => (props.square ? '16px' : null)};
   max-width: 100%;
-  
+
   &[disabled] {
-  cursor: not-allowed;
+    cursor: not-allowed;
   }
 
   &:hover {
@@ -25,12 +29,21 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = React.forwardRef(({ onClick, children, ...props }, ref) => {
-  return (
-    <StyledButton ref={ref} {...props} onClick={onClick} type="button">
-      {children}
-    </StyledButton>
-  );
-});
+export interface ButtonProps {
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children: ReactNode;
+  square?: boolean;
+  lg?: boolean;
+  sm?: boolean;
+  fullWidth?: boolean;
+}
 
-export default Button;
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ onClick, children, ...props }, ref) => {
+    return (
+      <StyledButton ref={ref} {...props} onClick={onClick} type="button">
+        {children}
+      </StyledButton>
+    );
+  }
+);
