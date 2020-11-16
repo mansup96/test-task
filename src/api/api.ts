@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { object } from 'prop-types';
 
 let $axios = axios.create({
   baseURL: 'http://localhost:3000/walking',
 });
 
-interface walk {
+type walk = {
   id: [number, null];
   date: Date;
   distance: number;

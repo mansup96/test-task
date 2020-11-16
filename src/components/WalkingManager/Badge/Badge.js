@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import Button from '../../common/Button/Button';
+import { Button } from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 
 const openBadgeStyles = () => css`

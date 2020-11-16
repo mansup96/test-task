@@ -1,7 +1,7 @@
 import React from 'react';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import Header from './components/Header/Header';
-import Section from './components/Section/Section';
+import Section from './components/common/Section/Section';
 import WalkingManager from './components/WalkingManager/WalkingManager';
 
 const theme: DefaultTheme = {

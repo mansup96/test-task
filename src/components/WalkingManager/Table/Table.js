@@ -57,7 +57,7 @@ const StyledTable = styled.ul`
 const Table = ({ walks, getWalks, isFetching, openWindow, ...props }) => {
   useEffect(() => {
     getWalks();
-  }, []);
+  }, [getWalks]);
 
   return (
     <StyledTable {...props}>

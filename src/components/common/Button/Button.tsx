@@ -1,9 +1,18 @@
 import React, { forwardRef, ReactNode } from 'react';
 import styled from 'styled-components';
 
-interface StyledButtonProps extends ButtonProps {
+type ButtonProps = {
+  onClick: () => void;
+  children: ReactNode;
+  square?: boolean;
+  lg?: boolean;
+  sm?: boolean;
+  fullWidth?: boolean;
+};
+
+type StyledButtonProps = ButtonProps & {
   ref: React.ReactNode;
-}
+};
 
 const StyledButton = styled.button<StyledButtonProps>`
   background-color: ${props => props.theme.accent};
@@ -28,15 +37,6 @@ const StyledButton = styled.button<StyledButtonProps>`
     background-color: ${props => props.theme.accentHover};
   }
 `;
-
-export interface ButtonProps {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  children: ReactNode;
-  square?: boolean;
-  lg?: boolean;
-  sm?: boolean;
-  fullWidth?: boolean;
-}
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ onClick, children, ...props }, ref) => {
