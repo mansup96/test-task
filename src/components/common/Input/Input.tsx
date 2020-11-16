@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fontStyle } from '../../../styles';
 
-type InputPropsType = {
+type InputProps = {
   id: string;
   label: string;
   onChange: (value: string) => void;
@@ -21,7 +21,7 @@ const StyledInput = styled.div`
   }
 `;
 
-const Input = ({ id, label, onChange, type, value }: InputPropsType) => {
+const Input = ({ id, label, onChange, type, value }: InputProps) => {
   const [currentValue, setCurrentValue] = useState(value);
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.value);

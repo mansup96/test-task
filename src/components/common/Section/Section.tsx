@@ -1,7 +1,16 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const StyledSection = styled.section`
+type StyledSectionProps = {
+  row?: boolean;
+  column?: boolean;
+};
+
+type SectionProps = StyledSectionProps & {
+  children: React.ReactNode;
+};
+
+const StyledSection = styled.section<StyledSectionProps>`
   max-width: 100%;
   background-color: ${({ theme }) => theme.white};
   & > .container {
@@ -24,10 +33,10 @@ const StyledSection = styled.section`
   }
 `;
 
-const Section = props => {
+const Section = ({ children, row, column }: SectionProps) => {
   return (
-    <StyledSection {...props}>
-      <div className="container">{props.children}</div>
+    <StyledSection {...{ row, column }}>
+      <div className="container">{children}</div>
     </StyledSection>
   );
 };

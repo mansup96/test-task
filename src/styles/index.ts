@@ -26,7 +26,11 @@ export const scrollBarStyle = () => css`
   }
 `;
 
-export const fontStyle = (fontSize, color, underline) => css`
+export const fontStyle = (
+  fontSize: string,
+  color: string,
+  underline: boolean
+) => css`
   font-family: ${({ theme }) => theme.sans};
   font-style: normal;
   font-weight: normal;
