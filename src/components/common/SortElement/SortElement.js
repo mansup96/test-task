@@ -28,31 +28,33 @@ const StyledElement = styled.div`
     cursor: pointer;
     margin-left: 7px;
     opacity: ${props => (props.isActive ? 1 : 0.3)};
-    transform: ${props =>
-      props.localSortOrder === 'desc' ? 'rotateX(180deg)' : null};
+    transform: ${props => (props.order === 'desc' ? 'rotateX(180deg)' : null)};
     transition: transform ${({ theme }) => theme.defaultTransition};
   }
 `;
 
-const SortElement = ({ label, onOrderChange, setAsActive, ...props }) => {
-  const [localSortOrder, setLocalSortOrder] = useState(props._order);
-
-  useEffect(() => {
-    if (props.isActive && localSortOrder !== props._order) {
-      onOrderChange(localSortOrder);
-    }
-  });
-
+const SortElement = ({
+  label,
+  onChangeWalksOrder,
+  setAsActive,
+  isActive,
+  order,
+}) => {
   const changeSortOrder = () => {
-    if (props.isActive) {
-      onOrderChange(props._order === 'asc' ? 'desc' : 'asc');
-      setLocalSortOrder(props._order === 'asc' ? 'desc' : 'asc');
+    if (isActive) {
+      onChangeWalksOrder(order === 'asc' ? 'desc' : 'asc');
+    }
+  };
+
+  const changeActivity = () => {
+    if (isActive === false) {
+      setAsActive();
     }
   };
 
   return (
-    <StyledElement {...props} localSortOrder={localSortOrder}>
-      <span onClick={setAsActive}>{label}</span>
+    <StyledElement {...{ order, isActive }}>
+      <span onClick={changeActivity}>{label}</span>
       <img onClick={changeSortOrder} src={icon} alt="arrow" />
     </StyledElement>
   );
