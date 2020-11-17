@@ -8,30 +8,34 @@ const ManagerHeaderWrapper = styled.div`
   display: flex;
 `;
 
-const ManagerHeader = ({ sortParams, onChange, ...props }) => {
-  const setSortBy = value => {
-    onChange({ ...sortParams, _sort: value });
-  };
-
-  const setSortOrder = value => {
-    onChange({ ...sortParams, _order: value });
+const ManagerHeader = ({
+  sortParams,
+  onChangeWalksOrder,
+  onChangeWalksSort,
+}) => {
+  const setSortParam = param => {
+    onChangeWalksSort(param);
   };
 
   return (
-    <ManagerHeaderWrapper {...props}>
+    <ManagerHeaderWrapper>
       <SortElement
         label="Дата"
-        isActive={sortParams._sort === 'date'}
-        _order={sortParams._order}
-        setAsActive={() => setSortBy('date')}
-        onOrderChange={setSortOrder}
+        order={sortParams.date.order}
+        isActive={sortParams.activeParam === 'date'}
+        setAsActive={() => setSortParam('date')}
+        onChangeWalksOrder={order =>
+          onChangeWalksOrder({ param: 'date', order })
+        }
       />
       <SortElement
         label="Дистанция"
-        isActive={sortParams._sort === 'distance'}
-        _order={sortParams._order}
-        setAsActive={() => setSortBy('distance')}
-        onOrderChange={setSortOrder}
+        order={sortParams.distance.order}
+        isActive={sortParams.activeParam === 'distance'}
+        setAsActive={() => setSortParam('distance')}
+        onChangeWalksOrder={order =>
+          onChangeWalksOrder({ param: 'distance', order })
+        }
       />
     </ManagerHeaderWrapper>
   );

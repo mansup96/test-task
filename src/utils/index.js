@@ -2,7 +2,7 @@ export const getQueryFromObject = obj => {
   let query = '?';
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      query += key + '=' + obj[key] + '&';
+      query += key + '=' + obj[key] + '&'; /*todo:query-string*/
     }
   }
   return query.slice(0, query.length - 1);
@@ -19,7 +19,7 @@ const declOfNum = (number, words) => {
 const getDistance = distance => {
   const words = ['метр', 'метра', 'метров'];
   const meters = declOfNum(distance, words);
-  return distance < 1000
+  return distance < 1000      /*todo:if*/
     ? `${distance} ${meters}`
     : distance % 1000 === 0
     ? `${parseInt(distance / 1000)} км`
@@ -28,14 +28,14 @@ const getDistance = distance => {
 
 export const transformDistance = walk => {
   return {
-    ...walk,
+    ...walk,   /*todo:перенести в actions*/
     transformedDistance: getDistance(walk.distance),
   };
 };
 
 export const getFormattedDate = date => {
   date = new Date(date);
-  const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();  /*todo:dateFns*/
   const month =
     date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
   const year = date.getFullYear();
@@ -58,7 +58,7 @@ const getDay = date => {
 
 export const transformDate = walk => {
   return {
-    ...walk,
+    ...walk,     /*todo:перенести в actions*/
     dateObject: {
       date: getFormattedDate(walk.date),
       day: getDay(walk.date),

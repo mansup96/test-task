@@ -1,8 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import managerReducer from './managerReducer';
+import reducer from './walkingManager/reducer';
 import thunkMiddleware from 'redux-thunk';
 
-const reducers = combineReducers({ managerReducer });
+const reducers = combineReducers({ managerReducer: reducer });
 
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));
 

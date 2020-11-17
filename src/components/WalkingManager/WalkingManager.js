@@ -4,17 +4,19 @@ import Button from '../common/Button/Button';
 import ManagerHeader from './ManagerHeader/ManagerHeader';
 import { connect } from 'react-redux';
 import {
-  fetchWalks,
+  changeWalksOrder,
+  changeWalksSort,
   handleBadge,
   handleWalk,
   removeWalk,
-} from '../../store/managerReducer';
+  getWalks,
+} from '../../store/walkingManager/actions';
 import Table from './Table/Table';
 import Badge from './Badge/Badge';
 
 const ManagerWrapper = styled.div`
   width: 335px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   position: relative;
 `;
 
@@ -24,11 +26,12 @@ const WalkingManager = props => {
     <ManagerWrapper {...props}>
       <ManagerHeader
         sortParams={props.managerState.sortParams}
-        onChange={props.fetchWalks}
+        onChangeWalksOrder={props.changeWalksOrder}
+        onChangeWalksSort={props.changeWalksSort}
       />
       <Table
         walks={props.managerState.walks}
-        getWalks={props.fetchWalks}
+        getWalks={props.getWalks}
         handleBadge={props.handleBadge}
         isFetching={props.managerState.isFetching}
         error={props.managerState.errorMsg}
@@ -57,8 +60,10 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  fetchWalks,
+  changeWalksSort,
+  changeWalksOrder,
   handleBadge,
   handleWalk,
   removeWalk,
+  getWalks,
 })(WalkingManager);
