@@ -1,12 +1,12 @@
-import types from './actionTypes';
+import { actionTypes, ManagerStateTypes } from './actionTypes';
 
-const initialState = {
+const initialState: ManagerStateTypes = {
   walks: [],
   sortParams: {
     date: { order: 'asc' },
     distance: { order: 'asc' },
-    activeParam: 'date',
   },
+  activeParam: 'date',
   badge: {
     activeWalk: null,
     isOpen: false,
@@ -15,48 +15,44 @@ const initialState = {
   errorMsg: null,
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action: any): ManagerStateTypes => {
   switch (action.type) {
-    case types.set_active_param:
+    case actionTypes.set_active_param:
       return {
         ...state,
-        sortParams: {
-          ...state.sortParams,
-          activeParam: action.param,
-        },
+        activeParam: action.param,
       };
-    case types.set_sort_order:
+    case actionTypes.set_sort_order:
       return {
         ...state,
         sortParams: {
           ...state.sortParams,
           [action.param]: {
-            ...state.sortParams[action.param],
             order: action.order,
           },
         },
       };
-    case types.set_walks:
+    case actionTypes.set_walks:
       return {
         ...state,
         walks: action.walks,
       };
-    case types.set_fetching:
+    case actionTypes.set_fetching:
       return {
         ...state,
         isFetching: action.value,
       };
-    case types.set_error:
+    case actionTypes.set_error:
       return {
         ...state,
         errorMsg: action.value,
       };
-    case types.clear_error:
+    case actionTypes.clear_error:
       return {
         ...state,
         errorMsg: null,
       };
-    case types.set_batch_mode:
+    case actionTypes.set_batch_mode:
       return {
         ...state,
         badge: {
@@ -64,7 +60,7 @@ const reducer = (state = initialState, action) => {
           isOpen: action.isOpen,
         },
       };
-    case types.set_active_walk:
+    case actionTypes.set_active_walk:
       return {
         ...state,
         badge: {

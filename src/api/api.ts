@@ -1,37 +1,24 @@
 import axios from 'axios';
+import { MappedWalk, Walk } from '../store/walkingManager/actionTypes';
 
 let $axios = axios.create({
   baseURL: 'http://localhost:3000/walking',
 });
 
-type walk = {
-  id: [number, null];
-  date: Date;
-  distance: number;
-}
-
 export const api = {
   getWalks(query: string) {
-    return $axios
-      .get(`/${query}`)
-      .then(resp => resp.data)
+    return $axios.get(`/${query}`).then(resp => resp.data);
   },
 
-  postWalk(walk: walk) {
-    return $axios
-      .post('/', walk)
-      .then(resp => resp)
+  postWalk(walk: Walk) {
+    return $axios.post('/', walk).then(resp => resp);
   },
 
-  putWalk(walk: walk, id: number) {
-    return $axios
-      .put(`/${id}`, walk)
-      .then(resp => resp)
+  putWalk(walk: Walk, id: number) {
+    return $axios.put(`/${id}`, walk).then(resp => resp.data);
   },
 
   deleteWalk(id: number) {
-    return $axios
-      .delete(`/${id}`)
-      .then(resp => resp)
+    return $axios.delete(`/${id}`).then(resp => resp);
   },
 };

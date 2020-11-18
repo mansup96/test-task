@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
-import {Button} from '../common/Button/Button';
+import { Button } from '../common/Button/Button';
 import ManagerHeader from './ManagerHeader/ManagerHeader';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   changeWalksOrder,
   changeWalksSort,
@@ -13,6 +13,7 @@ import {
 } from '../../store/walkingManager/actions';
 import Table from './Table/Table';
 import Badge from './Badge/Badge';
+import { RootState } from '../../store';
 
 const ManagerWrapper = styled.div`
   width: 335px;
@@ -20,11 +21,13 @@ const ManagerWrapper = styled.div`
   position: relative;
 `;
 
-const WalkingManager = props => {
-  const buttonRef = useRef(null);
+const WalkingManager = (props: PropsFromRedux) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   return (
-    <ManagerWrapper {...props}>
+    <ManagerWrapper>
       <ManagerHeader
+        activeParam={props.managerState.activeParam}
         sortParams={props.managerState.sortParams}
         onChangeWalksOrder={props.changeWalksOrder}
         onChangeWalksSort={props.changeWalksSort}
@@ -55,15 +58,19 @@ const WalkingManager = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: RootState) => ({
   managerState: state.managerReducer,
 });
 
-export default connect(mapStateToProps, {
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+const connector = connect(mapStateToProps, {
   changeWalksSort,
   changeWalksOrder,
   handleBadge,
   handleWalk,
   removeWalk,
   getWalks,
-})(WalkingManager);
+});
+
+export default connector(WalkingManager);

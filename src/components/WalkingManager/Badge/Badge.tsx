@@ -1,15 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Button } from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
+import { BadgeType, Walk } from '../../../store/walkingManager/actionTypes';
 
-const openBadgeStyles = () => css`
-  transform: ${props => `translateY(-${props.btnHeight}px)}`};
+type BadgeProps = {
+  badge: BadgeType;
+  btnRef: RefObject<HTMLButtonElement>;
+  handleBadge: (isOpen: boolean, id?: number | null) => void;
+  handleWalk: (walk: Walk, id?: number) => void;
+  removeWalk: (id: number) => void;
+};
+
+type StyledBadgeProps = {
+  isOpen: boolean;
+  btnHeight: number;
+};
+
+const openBadgeStyles = (btnHeight: number) => css`
+  width: 100%;
+  transform: ${() => `translateY(-${btnHeight}px)}`};
   opacity: 1;
   z-index: 100;
 `;
 
-const StyledBadge = styled.div`
+const StyledBadge = styled.div<StyledBadgeProps>`
   position: absolute;
   background-color: ${({ theme }) => theme.main};
   padding: 20px 15px;
@@ -18,7 +33,7 @@ const StyledBadge = styled.div`
   z-index: -100;
   bottom: 0;
 
-  ${props => props.isOpen && openBadgeStyles()}
+  ${props => props.isOpen && openBadgeStyles(props.btnHeight)}
 
   .closeBtn {
     display: block;
@@ -40,46 +55,53 @@ const StyledBadge = styled.div`
   }
 `;
 
-const Badge = ({ badge, ...props }) => {
-  const btnHeight = props.btnRef?.current?.getBoundingClientRect()?.height;
-  const [date, setDate] = useState(badge.activeWalk?.dateObject?.date || '');
+const Badge = ({
+  badge,
+  btnRef,
+  handleBadge,
+  handleWalk,
+  removeWalk,
+}: BadgeProps) => {
+  const btnHeight = btnRef?.current?.getBoundingClientRect().height ?? 0;
+  const [date, setDate] = useState(badge.activeWalk?.date || '');
   const [distance, setDistance] = useState(badge.activeWalk?.distance || 0);
-  const [editMode, setEditMode] = useState(!!badge.activeWalk);
 
   useEffect(() => {
-    setDate(badge.activeWalk?.dateObject?.date || '');
+    setDate(badge.activeWalk?.date || '');
     setDistance(badge.activeWalk?.distance || 0);
-    setEditMode(!!badge.activeWalk);
   }, [badge.activeWalk]);
 
-  const handleDate = e => {
+  const handleDate = (e: string) => {
     setDate(e);
   };
 
-  const handleDistance = e => {
-    setDistance(e);
+  const handleDistance = (e: string) => {
+    setDistance(parseInt(e));
   };
 
   const handleSave = () => {
     const walk = {
-      id: editMode ? badge.activeWalk?.id : null,
+      id: badge.activeWalk?.id ? badge.activeWalk.id : null,
       date,
-      distance: parseInt(distance),
+      distance: distance,
     };
-    if (editMode) {
-      props.handleWalk(walk, badge.activeWalk?.id);
+    if (badge.activeWalk?.id) {
+      // @ts-ignore
+
+      handleWalk(walk, badge.activeWalk?.id);
     } else {
-      props.handleWalk(walk);
+      // @ts-ignore
+      handleWalk(walk);
     }
   };
 
   return (
-    <StyledBadge {...props} isOpen={badge.isOpen} btnHeight={btnHeight}>
+    <StyledBadge isOpen={badge.isOpen} btnHeight={btnHeight}>
       <Button
         square
         className="closeBtn"
         title={'Закрыть окно'}
-        onClick={() => props.handleBadge(false)}
+        onClick={() => handleBadge(false)}
       >
         X
       </Button>
@@ -104,8 +126,15 @@ const Badge = ({ badge, ...props }) => {
         <Button sm onClick={handleSave}>
           Готово
         </Button>
-        {editMode && (
-          <Button sm onClick={() => props.removeWalk(badge.activeWalk?.id)}>
+        {badge.activeWalk?.id && (
+          <Button
+            sm
+            onClick={() => {
+              if (badge.activeWalk?.id) {
+                removeWalk(badge.activeWalk.id);
+              }
+            }}
+          >
             Удалить
           </Button>
         )}

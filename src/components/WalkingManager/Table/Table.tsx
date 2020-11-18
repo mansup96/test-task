@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
-import {fontStyle, scrollBarStyle} from '../../../styles';
+import { fontStyle, scrollBarStyle } from '../../../styles';
+import { MappedWalk } from '../../../store/walkingManager/actionTypes';
 
 const StyledTable = styled.ul`
   height: 480px;
@@ -54,20 +55,33 @@ const StyledTable = styled.ul`
   ${scrollBarStyle()}
 `;
 
-const Table = ({ walks, getWalks, isFetching, openWindow, ...props }) => {
+type TableType = {
+  walks: MappedWalk[];
+  getWalks: () => void;
+  handleBadge: (isOpen: boolean, id?: number | null) => void;
+  isFetching: boolean;
+  error?: string | null;
+};
+
+const Table = ({
+  walks,
+  getWalks,
+  isFetching,
+  handleBadge,
+}: TableType) => {
   useEffect(() => {
     getWalks();
   }, [getWalks]);
 
   return (
-    <StyledTable {...props}>
+    <StyledTable>
       {isFetching
         ? 'Подождите...'
         : walks.map((walk, i) => (
-            <li key={walk.id} onClick={() => props.handleBadge(true, walk.id)}>
+            <li key={walk.id} onClick={() => handleBadge(true, walk.id)}>
               <div className="dateWrapper">
-                <span className="day">{walk.dateObject.day}</span>
-                <span className="date">{walk.dateObject.date}</span>
+                <span className="day">{walk.day}</span>
+                <span className="date">{walk.date}</span>
               </div>
               <span className="distance">{walk.transformedDistance}</span>
             </li>

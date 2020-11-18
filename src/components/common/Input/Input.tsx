@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { fontStyle } from '../../../styles';
 
 type InputProps = {
+  className?: string;
   id: string;
   label: string;
   onChange: (value: string) => void;
-  type: string;
-  value: string;
+  type?: string;
+  value: string | number;
 };
 
 const StyledInput = styled.div`
@@ -21,7 +22,7 @@ const StyledInput = styled.div`
   }
 `;
 
-const Input = ({ id, label, onChange, type, value }: InputProps) => {
+const Input = ({ id, label, onChange, type, value, className }: InputProps) => {
   const [currentValue, setCurrentValue] = useState(value);
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.value);
@@ -32,7 +33,7 @@ const Input = ({ id, label, onChange, type, value }: InputProps) => {
   }, [value]);
 
   return (
-    <StyledInput className="input">
+    <StyledInput className={className + 'input'}>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}

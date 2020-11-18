@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import SortElement from '../../common/SortElement/SortElement';
+import {
+  ActiveParamType,
+  SortOrderType,
+  SortParamsType,
+  StateSortParams,
+} from '../../../store/walkingManager/actionTypes';
 
 const ManagerHeaderWrapper = styled.div`
   background-color: ${({ theme }) => theme.main};
@@ -8,12 +14,20 @@ const ManagerHeaderWrapper = styled.div`
   display: flex;
 `;
 
+type ManagerHeaderProps = {
+  activeParam: ActiveParamType;
+  sortParams: StateSortParams;
+  onChangeWalksOrder: ({ param, order }: SortParamsType) => void;
+  onChangeWalksSort: (param: string) => void;
+};
+
 const ManagerHeader = ({
+  activeParam,
   sortParams,
   onChangeWalksOrder,
   onChangeWalksSort,
-}) => {
-  const setSortParam = param => {
+}: ManagerHeaderProps) => {
+  const setSortParam = (param: string) => {
     onChangeWalksSort(param);
   };
 
@@ -22,18 +36,18 @@ const ManagerHeader = ({
       <SortElement
         label="Дата"
         order={sortParams.date.order}
-        isActive={sortParams.activeParam === 'date'}
+        isActive={activeParam === 'date'}
         setAsActive={() => setSortParam('date')}
-        onChangeWalksOrder={order =>
+        onChangeWalksOrder={(order: SortOrderType) =>
           onChangeWalksOrder({ param: 'date', order })
         }
       />
       <SortElement
         label="Дистанция"
         order={sortParams.distance.order}
-        isActive={sortParams.activeParam === 'distance'}
+        isActive={activeParam === 'distance'}
         setAsActive={() => setSortParam('distance')}
-        onChangeWalksOrder={order =>
+        onChangeWalksOrder={(order: SortOrderType) =>
           onChangeWalksOrder({ param: 'distance', order })
         }
       />

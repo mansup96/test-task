@@ -8,6 +8,9 @@ type ButtonProps = {
   lg?: boolean;
   sm?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
+  className?: string;
+  title?: string;
 };
 
 type StyledButtonProps = ButtonProps & {
