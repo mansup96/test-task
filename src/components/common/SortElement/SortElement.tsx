@@ -1,8 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import icon from '../../../static/icons/sortBtn--active--rise.svg';
+import { SortOrderType } from '../../../store/walkingManager/actionTypes';
 
-const StyledElement = styled.div`
+type StyledElementProps = {
+  isActive: boolean;
+  order: SortOrderType;
+};
+
+type SortElementProps = StyledElementProps & {
+  label: string;
+  onChangeWalksOrder: (order: SortOrderType) => void;
+  setAsActive: () => void;
+};
+
+const StyledElement = styled.div<StyledElementProps>`
   display: flex;
   align-items: center;
   width: 50%;
@@ -39,7 +51,7 @@ const SortElement = ({
   setAsActive,
   isActive,
   order,
-}) => {
+}: SortElementProps) => {
   const changeSortOrder = () => {
     if (isActive) {
       onChangeWalksOrder(order === 'asc' ? 'desc' : 'asc');
@@ -47,7 +59,7 @@ const SortElement = ({
   };
 
   const changeActivity = () => {
-    if (isActive === false) {
+    if (!isActive) {
       setAsActive();
     }
   };
