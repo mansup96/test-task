@@ -2,7 +2,7 @@ import axios from 'axios';
 import { MappedWalk, Walk } from '../store/walkingManager/actionTypes';
 
 let $axios = axios.create({
-  baseURL: 'http://localhost:3000/walking',
+  baseURL: 'http://localhost:3333/walking',
 });
 
 export const api = {
