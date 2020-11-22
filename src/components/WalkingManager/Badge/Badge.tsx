@@ -105,7 +105,6 @@ const Badge = ({
         <CustomDatePicker
           label="Дата"
           date={date}
-          className="dateInput"
           onChange={handleDate}
           dateFormat={'dd.MM.yyyy'}
         />
@@ -114,7 +113,6 @@ const Badge = ({
           id="date"
           type="number"
           label="Дистанция (м)"
-          className="dateInput"
           value={distance}
           onChange={handleDistance}
         />
