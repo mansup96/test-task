@@ -1,10 +1,4 @@
-import {
-  actionTypes,
-  MappedWalk,
-  ManagerStateTypes,
-  SortParamsType,
-  Walk,
-} from './actionTypes';
+import { actionTypes, MappedWalk, SortParamsType, Walk } from './actionTypes';
 import { getQueryFromObject } from '../../utils';
 import { api } from '../../api/api';
 import { ThunkAction } from 'redux-thunk';
@@ -60,35 +54,33 @@ const declOfNum = (number: number, words: string[]): string => {
 const getDistance = (distance: number): string => {
   const words = ['метр', 'метра', 'метров'];
   const meters = declOfNum(distance, words);
+  let result: string = '';
   if (distance < 1000) {
-    return `${distance} ${meters}`;
-  }
-  if (distance % 1000 === 0) {
-    return `${distance / 1000} км`;
+    result = `${distance} ${meters}`;
+  } else if (distance % 1000 === 0) {
+    result = `${distance / 1000} км`;
   } else {
-    return `${distance / 1000} км ${distance % 1000} ${meters}`;
+    result = `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`;
   }
+  return result;
 };
 
-const getDay = (date: string): string => {
-  const days = [
-    'Воскресенье',
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-  ];
-  return days[new Date(date).getDay()];
+const capitalizeFirstLetter = (string: string): string => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const getMappedData = (data: Walk[]) => {
-  return data.map(walk => ({
-    ...walk,
-    day: getDay(walk.date),
-    transformedDistance: getDistance(walk.distance),
-  }));
+const getMappedData = (data: Walk[]): MappedWalk[] => {
+  return data.map(walk => {
+    const date: Date = new Date(walk.date);
+    return {
+      ...walk,
+      localeDate: date.toLocaleDateString(),
+      localeDay: capitalizeFirstLetter(
+        date.toLocaleDateString('ru', { weekday: 'long' })
+      ),
+      transformedDistance: getDistance(walk.distance),
+    };
+  });
 };
 
 export const getWalks = (): ThunkAction<
@@ -168,12 +160,12 @@ export const handleBadge = (
 };
 
 export const handleWalk = (
-  walk: Walk,
-  id?: number
+  walk: Walk
 ): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
-  if (id) {
-    api.putWalk(walk, id).then(resp => {
+  if (walk.id) {
+    api.putWalk(walk, walk.id).then(resp => {
       if (resp.id) {
+        dispatch(setActiveWalk(null));
         dispatch(getWalks());
       }
     });
@@ -183,13 +175,14 @@ export const handleWalk = (
       dispatch(getWalks());
     });
   }
+  dispatch(setBadgeMode(false));
 };
 
 export const removeWalk = (
   id: number
 ): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
   if (id) {
-    api.deleteWalk(id).then(resp => {
+    api.deleteWalk(id).then(() => {
       dispatch(getWalks());
       dispatch(setBadgeMode(false));
     });

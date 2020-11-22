@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fontStyle } from '../../../styles';
+import { labelStyle } from '../../../styles';
 
 type InputProps = {
   className?: string;
@@ -14,8 +14,7 @@ type InputProps = {
 const StyledInput = styled.div`
   max-width: 150px;
   label {
-    display: block;
-    ${({ theme }) => fontStyle('12px', theme.white)}
+    ${labelStyle}
   }
   input {
     width: 100%;
@@ -25,7 +24,11 @@ const StyledInput = styled.div`
 const Input = ({ id, label, onChange, type, value, className }: InputProps) => {
   const [currentValue, setCurrentValue] = useState(value);
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    onChange(e.target.value);
+    if (type === 'number') {
+      onChange(e.target.value);
+    } else {
+      onChange(e.target.value);
+    }
   };
 
   useEffect(() => {
@@ -33,7 +36,7 @@ const Input = ({ id, label, onChange, type, value, className }: InputProps) => {
   }, [value]);
 
   return (
-    <StyledInput className={className + 'input'}>
+    <StyledInput>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}

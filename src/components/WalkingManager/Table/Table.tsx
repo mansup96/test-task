@@ -80,8 +80,8 @@ const Table = ({
         : walks.map((walk, i) => (
             <li key={walk.id} onClick={() => handleBadge(true, walk.id)}>
               <div className="dateWrapper">
-                <span className="day">{walk.day}</span>
-                <span className="date">{walk.date}</span>
+                <span className="day">{walk.localeDay}</span>
+                <span className="date">{walk.localeDate}</span>
               </div>
               <span className="distance">{walk.transformedDistance}</span>
             </li>

@@ -1,8 +1,10 @@
-import React, { RefObject, useEffect, useState } from 'react';
+import React, { ReactText, RefObject, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Button } from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BadgeType, Walk } from '../../../store/walkingManager/actionTypes';
+import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
+import { useDispatch } from 'react-redux';
 
 type BadgeProps = {
   badge: BadgeType;
@@ -43,9 +45,9 @@ const StyledBadge = styled.div<StyledBadgeProps>`
   .inputsRow {
     display: flex;
     margin-bottom: 10px;
-
-    .input {
-      margin: 5px;
+    justify-content: space-between;
+    .dateInput {
+      max-width: 150px;
     }
   }
 
@@ -67,32 +69,26 @@ const Badge = ({
   const [distance, setDistance] = useState(badge.activeWalk?.distance || 0);
 
   useEffect(() => {
-    setDate(badge.activeWalk?.date || '');
+    setDate(badge.activeWalk?.date || Date.now());
     setDistance(badge.activeWalk?.distance || 0);
   }, [badge.activeWalk]);
 
-  const handleDate = (e: string) => {
-    setDate(e);
+  const handleDate = (date: Date) => {
+    setDate(date);
   };
 
-  const handleDistance = (e: string) => {
-    setDistance(parseInt(e));
+  const handleDistance = (value: string) => {
+    setDistance(parseInt(value));
   };
 
   const handleSave = () => {
     const walk = {
       id: badge.activeWalk?.id ? badge.activeWalk.id : null,
       date,
-      distance: distance,
+      distance,
     };
-    if (badge.activeWalk?.id) {
-      // @ts-ignore
-
-      handleWalk(walk, badge.activeWalk?.id);
-    } else {
-      // @ts-ignore
-      handleWalk(walk);
-    }
+    handleWalk(walk);
+    setDistance(0);
   };
 
   return (
@@ -106,18 +102,19 @@ const Badge = ({
         X
       </Button>
       <div className={'inputsRow'}>
-        <Input
-          className={'dateInput'}
-          id="date"
+        <CustomDatePicker
           label="Дата"
-          value={date}
+          date={date}
+          className="dateInput"
           onChange={handleDate}
+          dateFormat={'dd.MM.yyyy'}
         />
 
         <Input
           id="date"
           type="number"
-          label="Дистанция"
+          label="Дистанция (м)"
+          className="dateInput"
           value={distance}
           onChange={handleDistance}
         />

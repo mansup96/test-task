@@ -32,11 +32,12 @@ export type ManagerStateTypes = {
 export type Walk = {
   id: number | null;
   distance: number;
-  date: string;
+  date: number | string | Date;
 };
 
 export type MappedWalk = Walk & {
-  day: string;
+  localeDate: string;
+  localeDay: string;
   transformedDistance: string;
 };
 

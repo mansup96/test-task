@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MappedWalk, Walk } from '../store/walkingManager/actionTypes';
+import { Walk } from '../store/walkingManager/actionTypes';
 
 let $axios = axios.create({
   baseURL: 'http://localhost:3333/walking',

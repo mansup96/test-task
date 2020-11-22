@@ -55,3 +55,8 @@ export const fontStyle = (
     text-decoration: underline;
   `}
 `;
+
+export const labelStyle = () => css`
+  display: block;
+  ${({ theme }) => fontStyle('12px', theme.white)}
+`;
