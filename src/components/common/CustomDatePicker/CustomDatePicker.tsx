@@ -12,7 +12,6 @@ registerLocale('ru', ru);
 type CustomDatePickerProps = {
   date: string | Date | number;
   label: string;
-  onChange: (date: any) => void;
   className?: string;
 };
 
@@ -20,20 +19,22 @@ const StyledDatepicker = styled.div`
   label {
     ${labelStyle()}
   }
-  
-  
+  .react-datepicker__day--selected {
+    background-color: ${({ theme }) => theme.accent};
+  }
+  .react-datepicker-wrapper,
+  .react-datepicker-wrapper input {
+    width: 100%;
+  }
 `;
 
 const CustomDatePicker = ({
   date,
   label,
-  onChange,
   className,
   ...props
 }: CustomDatePickerProps & ReactDatePickerProps) => {
-  const [curDate, setCurDate] = useState(
-    new Date(props.selected || Date.now())
-  );
+  const [curDate, setCurDate] = useState(new Date(date || Date.now()));
   useEffect(() => {
     setCurDate(new Date(date || Date.now()));
   }, [date]);
@@ -41,12 +42,7 @@ const CustomDatePicker = ({
   return (
     <StyledDatepicker className={className}>
       <label>{label}</label>
-      <DatePicker
-        selected={curDate}
-        onChange={onChange}
-        {...props}
-        locale="ru"
-      />
+      <DatePicker selected={curDate} {...props} locale="ru" />
     </StyledDatepicker>
   );
 };

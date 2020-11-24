@@ -55,7 +55,7 @@ const StyledTable = styled.ul`
   ${scrollBarStyle()}
 `;
 
-type TableType = {
+type TableProps= {
   walks: MappedWalk[];
   getWalks: () => void;
   handleBadge: (isOpen: boolean, id?: number | null) => void;
@@ -63,12 +63,7 @@ type TableType = {
   error?: string | null;
 };
 
-const Table = ({
-  walks,
-  getWalks,
-  isFetching,
-  handleBadge,
-}: TableType) => {
+const Table = ({ walks, getWalks, isFetching, handleBadge }: TableProps) => {
   useEffect(() => {
     getWalks();
   }, [getWalks]);

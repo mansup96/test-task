@@ -1,10 +1,10 @@
-import React, { ReactText, RefObject, useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { Button } from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BadgeType, Walk } from '../../../store/walkingManager/actionTypes';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
-import { useDispatch } from 'react-redux';
+import { startOfTomorrow } from 'date-fns';
 
 type BadgeProps = {
   badge: BadgeType;
@@ -46,8 +46,8 @@ const StyledBadge = styled.div<StyledBadgeProps>`
     display: flex;
     margin-bottom: 10px;
     justify-content: space-between;
-    .dateInput {
-      max-width: 150px;
+    .input {
+      width: 150px;
     }
   }
 
@@ -66,11 +66,14 @@ const Badge = ({
 }: BadgeProps) => {
   const btnHeight = btnRef?.current?.getBoundingClientRect().height ?? 0;
   const [date, setDate] = useState(badge.activeWalk?.date || '');
-  const [distance, setDistance] = useState(badge.activeWalk?.distance || 0);
+  const [distance, setDistance] = useState(
+    badge.activeWalk?.distance.toString() || ''
+  );
+  const [error, setError] = useState('');
 
   useEffect(() => {
     setDate(badge.activeWalk?.date || Date.now());
-    setDistance(badge.activeWalk?.distance || 0);
+    setDistance(badge.activeWalk?.distance.toString() || '');
   }, [badge.activeWalk]);
 
   const handleDate = (date: Date) => {
@@ -78,17 +81,40 @@ const Badge = ({
   };
 
   const handleDistance = (value: string) => {
-    setDistance(parseInt(value));
+    if (!value || Number(value) <= 0) {
+      setError('Введите корректные данные');
+      setDistance(value);
+    } else {
+      setDistance(value);
+      setError('');
+    }
   };
 
+  const fromToday = (date: Date): boolean => date < new Date();
+
   const handleSave = () => {
-    const walk = {
-      id: badge.activeWalk?.id ? badge.activeWalk.id : null,
-      date,
-      distance,
-    };
-    handleWalk(walk);
-    setDistance(0);
+    if (distance) {
+      const walk = {
+        id: badge.activeWalk?.id ? badge.activeWalk.id : null,
+        date,
+        distance: Number(distance),
+      };
+      handleWalk(walk);
+      setDistance('');
+    } else {
+      setError('Введите корректные данные');
+    }
+  };
+
+  const closeBadge = () => {
+    handleBadge(false);
+    setError('');
+  };
+
+  const deleteWalk = () => {
+    if (badge.activeWalk?.id) {
+      removeWalk(badge.activeWalk.id);
+    }
   };
 
   return (
@@ -97,39 +123,36 @@ const Badge = ({
         square
         className="closeBtn"
         title={'Закрыть окно'}
-        onClick={() => handleBadge(false)}
+        onClick={closeBadge}
       >
         X
       </Button>
       <div className={'inputsRow'}>
         <CustomDatePicker
+          className={'input'}
           label="Дата"
           date={date}
+          filterDate={fromToday}
           onChange={handleDate}
           dateFormat={'dd.MM.yyyy'}
         />
 
         <Input
-          id="date"
+          className={'input'}
           type="number"
           label="Дистанция (м)"
           value={distance}
-          onChange={handleDistance}
+          onChangeValue={handleDistance}
+          error={error}
+          step={'100'}
         />
       </div>
       <div className={'buttonsRow'}>
-        <Button sm onClick={handleSave}>
+        <Button sm disabled={!!error || !distance} onClick={handleSave}>
           Готово
         </Button>
         {badge.activeWalk?.id && (
-          <Button
-            sm
-            onClick={() => {
-              if (badge.activeWalk?.id) {
-                removeWalk(badge.activeWalk.id);
-              }
-            }}
-          >
+          <Button sm onClick={deleteWalk}>
             Удалить
           </Button>
         )}

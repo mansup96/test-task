@@ -1,4 +1,4 @@
-export const actionTypes: { [key: string]: string } = {
+export const actionTypes = {
   set_active_param: 'manager/set_active_param',
   set_sort_order: 'manager/set_sort_order',
   set_walks: 'manager/set_walks',

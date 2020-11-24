@@ -42,9 +42,9 @@ const StyledButton = styled.button<StyledButtonProps>`
 `;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ onClick, children, ...props }, ref) => {
+  ({ children, ...props }, ref) => {
     return (
-      <StyledButton ref={ref} {...props} onClick={onClick} type="button">
+      <StyledButton ref={ref} {...props} type="button">
         {children}
       </StyledButton>
     );

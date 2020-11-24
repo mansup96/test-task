@@ -103,7 +103,7 @@ export const getWalks = (): ThunkAction<
 
   await api
     .getWalks(query)
-    .then((data: Walk[]) => {
+    .then(data => {
       const mappedData: MappedWalk[] = getMappedData(data);
       dispatch(setWalks(mappedData));
     })

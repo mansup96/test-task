@@ -1,34 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { InputHTMLAttributes, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { labelStyle } from '../../../styles';
 
-type InputProps = {
+type InputProps = InputHTMLAttributes<any> & {
   className?: string;
-  id: string;
   label: string;
-  onChange: (value: string) => void;
+  onChangeValue: (value: string) => void;
   type?: string;
-  value: string | number;
+  value: string;
+  error?: string;
 };
 
 const StyledInput = styled.div`
   max-width: 150px;
+  position: relative;
   label {
     ${labelStyle}
   }
   input {
     width: 100%;
+    margin-bottom: 12px;
+  }
+  span {
+    position: absolute;
+    bottom: 0;
+    ${labelStyle};
+    color: ${({ theme }) => theme.accent};
+    font-size: 10px;
   }
 `;
 
-const Input = ({ id, label, onChange, type, value, className }: InputProps) => {
+const Input = ({
+  label,
+  onChangeValue,
+  type,
+  value,
+  className,
+  error,
+  ...props
+}: InputProps) => {
   const [currentValue, setCurrentValue] = useState(value);
+
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (type === 'number') {
-      onChange(e.target.value);
-    } else {
-      onChange(e.target.value);
-    }
+    onChangeValue(e.target.value);
   };
 
   useEffect(() => {
@@ -36,14 +50,15 @@ const Input = ({ id, label, onChange, type, value, className }: InputProps) => {
   }, [value]);
 
   return (
-    <StyledInput>
-      <label htmlFor={id}>{label}</label>
+    <StyledInput className={className}>
+      <label>{label}</label>
       <input
-        id={id}
         type={type || 'text'}
         value={currentValue}
         onChange={changeHandler}
+        {...props}
       />
+      {error && <span>{error}</span>}
     </StyledInput>
   );
 };

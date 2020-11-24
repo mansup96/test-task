@@ -6,19 +6,13 @@ let $axios = axios.create({
 });
 
 export const api = {
-  getWalks(query: string) {
-    return $axios.get(`/${query}`).then(resp => resp.data);
-  },
+  getWalks: async (query: string) =>
+    (await $axios.get(`/${query}`)).data as Walk[],
 
-  postWalk(walk: Walk) {
-    return $axios.post('/', walk).then(resp => resp);
-  },
+  postWalk: async (walk: Walk) => (await $axios.post('/', walk)).data,
 
-  putWalk(walk: Walk, id: number) {
-    return $axios.put(`/${id}`, walk).then(resp => resp.data);
-  },
+  putWalk: async (walk: Walk, id: number) =>
+    (await $axios.put(`/${id}`, walk)).data,
 
-  deleteWalk(id: number) {
-    return $axios.delete(`/${id}`).then(resp => resp);
-  },
+  deleteWalk: async (id: number) => (await $axios.delete(`/${id}`)).data,
 };

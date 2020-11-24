@@ -5,7 +5,8 @@ export const GlobalStyle = createGlobalStyle`
 ${normalize}
 *, *:before, *:after {
   box-sizing: border-box;
-}
+  outline: none;
+}, 
 `;
 
 export const theme = {
