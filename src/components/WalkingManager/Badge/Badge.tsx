@@ -4,7 +4,6 @@ import { Button } from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BadgeType, Walk } from '../../../store/walkingManager/actionTypes';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
-import { startOfTomorrow } from 'date-fns';
 
 type BadgeProps = {
   badge: BadgeType;

@@ -54,15 +54,13 @@ const declOfNum = (number: number, words: string[]): string => {
 const getDistance = (distance: number): string => {
   const words = ['метр', 'метра', 'метров'];
   const meters = declOfNum(distance, words);
-  let result: string = '';
   if (distance < 1000) {
-    result = `${distance} ${meters}`;
+    return `${distance} ${meters}`;
   } else if (distance % 1000 === 0) {
-    result = `${distance / 1000} км`;
+    return `${distance / 1000} км`;
   } else {
-    result = `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`;
+    return `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`;
   }
-  return result;
 };
 
 const capitalizeFirstLetter = (string: string): string => {
@@ -171,7 +169,6 @@ export const handleWalk = (
     });
   } else {
     api.postWalk(walk).then(resp => {
-      console.log(resp);
       dispatch(getWalks());
     });
   }
