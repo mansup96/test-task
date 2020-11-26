@@ -7,6 +7,9 @@ export const actionTypes = {
   clear_error: 'manager/clear_error',
   set_batch_mode: 'manager/set_batch_mode',
   set_active_walk: 'manager/set_active_walk',
+  set_total_count: 'manager/set_total_count',
+  set_page: 'manager/set_page',
+  clean_walks: 'manager/clean_walks'
 };
 
 export type ActiveParamType = 'date' | 'distance';
@@ -20,10 +23,17 @@ export type BadgeType = {
   isOpen: boolean;
 };
 
+export type PaginationParamsType = {
+  limit: number;
+  page: number;
+  totalCount: number;
+};
+
 export type ManagerStateTypes = {
   walks: MappedWalk[];
   sortParams: StateSortParams;
   activeParam: ActiveParamType;
+  paginationParams: PaginationParamsType;
   badge: BadgeType;
   isFetching: boolean;
   errorMsg: string | null;

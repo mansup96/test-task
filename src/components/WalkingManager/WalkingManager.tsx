@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../common/Button/Button';
 import ManagerHeader from './ManagerHeader/ManagerHeader';
@@ -9,7 +9,9 @@ import {
   handleBadge,
   handleWalk,
   removeWalk,
-  getWalks,
+  setPage,
+  fetchWalks,
+  incrementPage,
 } from '../../store/walkingManager/actions';
 import Table from './Table/Table';
 import Badge from './Badge/Badge';
@@ -21,8 +23,12 @@ const ManagerWrapper = styled.div`
   position: relative;
 `;
 
-const WalkingManager = (props: PropsFromRedux) => {
+const WalkingManager = ({ fetchWalks, page, ...props }: PropsFromRedux) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    fetchWalks();
+  }, [fetchWalks]);
 
   return (
     <ManagerWrapper>
@@ -33,8 +39,9 @@ const WalkingManager = (props: PropsFromRedux) => {
         onChangeWalksSort={props.changeWalksSort}
       />
       <Table
+        incrementPage={props.incrementPage}
         walks={props.managerState.walks}
-        getWalks={props.getWalks}
+        setPage={props.setPage}
         handleBadge={props.handleBadge}
         isFetching={props.managerState.isFetching}
         error={props.managerState.errorMsg}
@@ -60,6 +67,7 @@ const WalkingManager = (props: PropsFromRedux) => {
 
 const mapStateToProps = (state: RootState) => ({
   managerState: state.managerReducer,
+  page: state.managerReducer.paginationParams.page,
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -70,7 +78,9 @@ const connector = connect(mapStateToProps, {
   handleBadge,
   handleWalk,
   removeWalk,
-  getWalks,
+  setPage,
+  fetchWalks,
+  incrementPage,
 });
 
 export default connector(WalkingManager);

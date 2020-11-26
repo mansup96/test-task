@@ -6,6 +6,11 @@ const initialState: ManagerStateTypes = {
     date: { order: 'asc' },
     distance: { order: 'asc' },
   },
+  paginationParams: {
+    limit: 15,
+    totalCount: 0,
+    page: 1,
+  },
   activeParam: 'date',
   badge: {
     activeWalk: null,
@@ -35,7 +40,7 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
     case actionTypes.set_walks:
       return {
         ...state,
-        walks: action.walks,
+        walks: [...state.walks, ...action.walks],
       };
     case actionTypes.set_fetching:
       return {
@@ -67,6 +72,27 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           ...state.badge,
           activeWalk: action.walk,
         },
+      };
+    case actionTypes.set_total_count:
+      return {
+        ...state,
+        paginationParams: {
+          ...state.paginationParams,
+          totalCount: action.count,
+        },
+      };
+    case actionTypes.set_page:
+      return {
+        ...state,
+        paginationParams: {
+          ...state.paginationParams,
+          page: action.page,
+        },
+      };
+    case actionTypes.clean_walks:
+      return {
+        ...state,
+        walks: [],
       };
     default:
       return state;

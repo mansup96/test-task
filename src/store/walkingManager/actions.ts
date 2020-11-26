@@ -1,5 +1,5 @@
 import { actionTypes, MappedWalk, SortParamsType, Walk } from './actionTypes';
-import { getQueryFromObject } from '../../utils';
+
 import { api } from '../../api/api';
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
@@ -28,6 +28,8 @@ const setSortOrder = ({ param, order }: SortParamsType) => ({
   order,
 });
 
+const cleanWalks = () => ({ type: actionTypes.clean_walks });
+
 const setWalks = (walks: MappedWalk[]) => ({
   type: actionTypes.set_walks,
   walks,
@@ -36,6 +38,16 @@ const setWalks = (walks: MappedWalk[]) => ({
 const setFetching = (value: boolean) => ({
   type: actionTypes.set_fetching,
   value,
+});
+
+const setTotalCount = (count: number) => ({
+  type: actionTypes.set_total_count,
+  count,
+});
+
+export const setPage = (page: number) => ({
+  type: actionTypes.set_page,
+  page,
 });
 
 const setError = (value: string) => ({ type: actionTypes.set_error, value });
@@ -81,7 +93,7 @@ const getMappedData = (data: Walk[]): MappedWalk[] => {
   });
 };
 
-export const getWalks = (): ThunkAction<
+export const fetchWalks = (): ThunkAction<
   void,
   RootState,
   unknown,
@@ -91,19 +103,21 @@ export const getWalks = (): ThunkAction<
 
   const sortParams = getState().managerReducer.sortParams;
   const activeParam = getState().managerReducer.activeParam;
+  const { page, limit } = getState().managerReducer.paginationParams;
 
-  const params = {
+  const queryParams = {
     _sort: activeParam,
     _order: sortParams[activeParam].order,
+    _page: page,
+    _limit: limit,
   };
 
-  const query = getQueryFromObject(params);
-
   await api
-    .getWalks(query)
-    .then(data => {
-      const mappedData: MappedWalk[] = getMappedData(data);
+    .getWalks(queryParams)
+    .then(resp => {
+      const mappedData: MappedWalk[] = getMappedData(resp.data);
       dispatch(setWalks(mappedData));
+      dispatch(setTotalCount(resp.totalCount));
     })
     .catch(err => {
       console.log(err);
@@ -117,8 +131,7 @@ export const changeWalksSort = (
   param: string
 ): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
   dispatch(setActiveParam(param));
-
-  dispatch(getWalks());
+  dispatch(reInitWalks());
 };
 
 export const changeWalksOrder = ({
@@ -132,8 +145,8 @@ export const changeWalksOrder = ({
 > => dispatch => {
   if (param && order) {
     dispatch(setSortOrder({ param, order }));
+    dispatch(reInitWalks());
   }
-  dispatch(getWalks());
 };
 
 export const handleBadge = (
@@ -157,6 +170,35 @@ export const handleBadge = (
   dispatch(setBadgeMode(isOpen));
 };
 
+const reInitWalks = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action<string>
+> => dispatch => {
+  dispatch(setPage(1));
+  dispatch(cleanWalks());
+  dispatch(fetchWalks());
+};
+
+export const incrementPage = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action<string>
+> => (dispatch, getState) => {
+  const {
+    page,
+    limit,
+    totalCount,
+  } = getState().managerReducer.paginationParams;
+
+  if (limit * page < totalCount) {
+    dispatch(setPage(page + 1));
+    dispatch(fetchWalks());
+  }
+};
+
 export const handleWalk = (
   walk: Walk
 ): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
@@ -164,14 +206,12 @@ export const handleWalk = (
     api.putWalk(walk, walk.id).then(resp => {
       if (resp.id) {
         dispatch(setActiveWalk(null));
-        dispatch(getWalks());
       }
     });
   } else {
-    api.postWalk(walk).then(resp => {
-      dispatch(getWalks());
-    });
+    api.postWalk(walk).then(resp => {});
   }
+  dispatch(reInitWalks());
   dispatch(setBadgeMode(false));
 };
 
@@ -180,7 +220,7 @@ export const removeWalk = (
 ): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
   if (id) {
     api.deleteWalk(id).then(() => {
-      dispatch(getWalks());
+      dispatch(fetchWalks());
       dispatch(setBadgeMode(false));
     });
   }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { fontStyle, scrollBarStyle } from '../../../styles';
 import { MappedWalk } from '../../../store/walkingManager/actionTypes';
@@ -55,32 +55,63 @@ const StyledTable = styled.ul`
   ${scrollBarStyle()}
 `;
 
-type TableProps= {
+type TableProps = {
   walks: MappedWalk[];
-  getWalks: () => void;
+  incrementPage: () => void;
   handleBadge: (isOpen: boolean, id?: number | null) => void;
+  setPage: (page: number) => void;
   isFetching: boolean;
   error?: string | null;
 };
 
-const Table = ({ walks, getWalks, isFetching, handleBadge }: TableProps) => {
+const Table = ({
+  walks,
+  isFetching,
+  handleBadge,
+  incrementPage,
+}: TableProps) => {
+  const lastListItem = useRef<HTMLLIElement>(null);
+
   useEffect(() => {
-    getWalks();
-  }, [getWalks]);
+    const options = {
+      threshold: 1,
+    };
+
+    const callback: IntersectionObserverCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          incrementPage();
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(callback, options);
+    if (lastListItem.current) {
+      observer.observe(lastListItem.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [walks, incrementPage]);
 
   return (
-    <StyledTable>
-      {isFetching
-        ? 'Подождите...'
-        : walks.map((walk, i) => (
-            <li key={walk.id} onClick={() => handleBadge(true, walk.id)}>
-              <div className="dateWrapper">
-                <span className="day">{walk.localeDay}</span>
-                <span className="date">{walk.localeDate}</span>
-              </div>
-              <span className="distance">{walk.transformedDistance}</span>
-            </li>
-          ))}
+    <StyledTable id="table">
+      {walks.length > 0 &&
+        walks.map((walk, i) => (
+          <li
+            key={walk.id}
+            onClick={() => handleBadge(true, walk.id)}
+            ref={i === walks.length - 1 ? lastListItem : null}
+          >
+            <div className="dateWrapper">
+              <span className="day">{walk.localeDay}</span>
+              <span className="date">{walk.localeDate}</span>
+            </div>
+            <span className="distance">{walk.transformedDistance}</span>
+          </li>
+        ))}
+      {isFetching && 'Подождите...'}
     </StyledTable>
   );
 };
