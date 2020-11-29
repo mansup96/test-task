@@ -9,7 +9,7 @@ export const actionTypes = {
   set_active_walk: 'manager/set_active_walk',
   set_total_count: 'manager/set_total_count',
   set_page: 'manager/set_page',
-  clean_walks: 'manager/clean_walks'
+  clean_walks: 'manager/clean_walks',
 };
 
 export type ActiveParamType = 'date' | 'distance';

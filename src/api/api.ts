@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Walk } from '../store/walkingManager/actionTypes';
-import queryString from 'querystring';
+import { SortOrderType, Walk } from '../store/walkingManager/actionTypes';
+import queryString from 'query-string';
 
 let $axios = axios.create({
   baseURL: 'http://localhost:3333/walking',
@@ -12,15 +12,17 @@ type GetWalksResponse = {
 };
 
 type QueryParams = {
-  _sort: string;
-  _order: 'asc' | 'desc';
+  _sort: string[];
+  _order: SortOrderType[];
   _page: number;
   _limit: number;
 };
 
 export const api = {
   getWalks: async (queryParams: QueryParams): Promise<GetWalksResponse> => {
-    const stringifiedParams = queryString.stringify(queryParams);
+    const stringifiedParams = queryString.stringify(queryParams, {
+      arrayFormat: 'comma',
+    });
     const response = await $axios.get(`?${stringifiedParams}`);
     return {
       data: response.data,

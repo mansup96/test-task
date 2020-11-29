@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useEffect, useState } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { labelStyle } from '../../../styles';
 
@@ -39,22 +39,16 @@ const Input = ({
   error,
   ...props
 }: InputProps) => {
-  const [currentValue, setCurrentValue] = useState(value);
-
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChangeValue(e.target.value);
   };
-
-  useEffect(() => {
-    setCurrentValue(value);
-  }, [value]);
 
   return (
     <StyledInput className={className}>
       <label>{label}</label>
       <input
         type={type || 'text'}
-        value={currentValue}
+        value={value}
         onChange={changeHandler}
         {...props}
       />

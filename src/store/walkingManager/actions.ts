@@ -101,13 +101,17 @@ export const fetchWalks = (): ThunkAction<
 > => async (dispatch, getState) => {
   dispatch(setFetching(true));
 
-  const sortParams = getState().managerReducer.sortParams;
-  const activeParam = getState().managerReducer.activeParam;
+  const { sortParams, activeParam } = getState().managerReducer;
   const { page, limit } = getState().managerReducer.paginationParams;
 
   const queryParams = {
-    _sort: activeParam,
-    _order: sortParams[activeParam].order,
+    _sort: [activeParam, activeParam === 'date' ? 'distance' : 'date'],
+    _order: [
+      sortParams[activeParam].order,
+      activeParam === 'date'
+        ? sortParams['distance'].order
+        : sortParams['date'].order,
+    ],
     _page: page,
     _limit: limit,
   };
@@ -120,7 +124,6 @@ export const fetchWalks = (): ThunkAction<
       dispatch(setTotalCount(resp.totalCount));
     })
     .catch(err => {
-      console.log(err);
       dispatch(setError('Ошибка'));
     });
 
@@ -201,27 +204,24 @@ export const incrementPage = (): ThunkAction<
 
 export const handleWalk = (
   walk: Walk
-): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
+): ThunkAction<void, RootState, unknown, Action<string>> => async dispatch => {
+  walk.date = new Date(walk.date).toISOString();
   if (walk.id) {
-    api.putWalk(walk, walk.id).then(resp => {
-      if (resp.id) {
-        dispatch(setActiveWalk(null));
-      }
-    });
+    await api.putWalk(walk, walk.id);
   } else {
-    api.postWalk(walk).then(resp => {});
+    await api.postWalk(walk).then(resp => {});
   }
+  dispatch(setActiveWalk(null));
   dispatch(reInitWalks());
   dispatch(setBadgeMode(false));
 };
 
 export const removeWalk = (
   id: number
-): ThunkAction<void, RootState, unknown, Action<string>> => dispatch => {
+): ThunkAction<void, RootState, unknown, Action<string>> => async dispatch => {
   if (id) {
-    api.deleteWalk(id).then(() => {
-      dispatch(fetchWalks());
-      dispatch(setBadgeMode(false));
-    });
+    await api.deleteWalk(id);
+    dispatch(reInitWalks());
+    dispatch(setBadgeMode(false));
   }
 };

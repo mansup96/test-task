@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DatePicker, {
   ReactDatePickerProps,
   registerLocale,
@@ -34,15 +34,14 @@ const CustomDatePicker = ({
   className,
   ...props
 }: CustomDatePickerProps & ReactDatePickerProps) => {
-  const [curDate, setCurDate] = useState(new Date(date || Date.now()));
-  useEffect(() => {
-    setCurDate(new Date(date || Date.now()));
-  }, [date]);
-
   return (
     <StyledDatepicker className={className}>
       <label>{label}</label>
-      <DatePicker selected={curDate} {...props} locale="ru" />
+      <DatePicker
+        selected={new Date(date)}
+        {...props}
+        locale={props.locale || 'ru'}
+      />
     </StyledDatepicker>
   );
 };

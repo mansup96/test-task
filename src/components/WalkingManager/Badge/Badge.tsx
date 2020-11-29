@@ -64,14 +64,16 @@ const Badge = ({
   removeWalk,
 }: BadgeProps) => {
   const btnHeight = btnRef?.current?.getBoundingClientRect().height ?? 0;
-  const [date, setDate] = useState(badge.activeWalk?.date || '');
+  const [date, setDate] = useState(
+    badge.activeWalk?.date || new Date().setHours(0, 0, 0, 0)
+  );
   const [distance, setDistance] = useState(
     badge.activeWalk?.distance.toString() || ''
   );
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setDate(badge.activeWalk?.date || Date.now());
+    setDate(badge.activeWalk?.date || new Date().setHours(0, 0, 0, 0));
     setDistance(badge.activeWalk?.distance.toString() || '');
   }, [badge.activeWalk]);
 
@@ -100,6 +102,7 @@ const Badge = ({
       };
       handleWalk(walk);
       setDistance('');
+      setDate(new Date().setHours(0, 0, 0, 0));
     } else {
       setError('Введите корректные данные');
     }

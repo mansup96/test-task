@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { fontStyle, scrollBarStyle } from '../../../styles';
 import { MappedWalk } from '../../../store/walkingManager/actionTypes';
+import Preloader from '../../common/Preloader/Preloader';
 
 const StyledTable = styled.ul`
   height: 480px;
@@ -31,6 +32,11 @@ const StyledTable = styled.ul`
     &:hover {
       background-color: #f7f7f7;
     }
+  }
+
+  .info {
+    text-align: center;
+    display: block;
   }
 
   .dateWrapper {
@@ -111,7 +117,10 @@ const Table = ({
             <span className="distance">{walk.transformedDistance}</span>
           </li>
         ))}
-      {isFetching && 'Подождите...'}
+      {isFetching && <Preloader />}
+      {!isFetching && walks.length === 0 && (
+        <span className={'info'}>Список пуст</span>
+      )}
     </StyledTable>
   );
 };
