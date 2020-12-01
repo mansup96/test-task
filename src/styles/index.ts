@@ -1,12 +1,17 @@
 import { createGlobalStyle, css } from 'styled-components';
 import { normalize } from 'styled-normalize';
+import { fonts } from '../static/fonts/fonts.js';
 
 export const GlobalStyle = createGlobalStyle`
 ${normalize}
+
+${fonts}
+
 *, *:before, *:after {
   box-sizing: border-box;
   outline: none;
-}, 
+},
+
 `;
 
 export const theme = {
