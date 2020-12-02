@@ -10,6 +10,8 @@ export const actionTypes = {
   set_total_count: 'manager/set_total_count',
   set_page: 'manager/set_page',
   clean_walks: 'manager/clean_walks',
+  set_rangedWalks: 'manager/set_rangedWalks',
+  set_range: 'manager/set_range',
 };
 
 export type ActiveParamType = 'date' | 'distance';
@@ -37,7 +39,11 @@ export type ManagerStateTypes = {
   badge: BadgeType;
   isFetching: boolean;
   errorMsg: string | null;
+  chartRange: ChartRangeType;
+  rangedWalks: MappedWalk[];
 };
+
+export type ChartRangeType = [Date, Date];
 
 export type Walk = {
   id: number | null;
@@ -48,7 +54,7 @@ export type Walk = {
 export type MappedWalk = Walk & {
   localeDate: string;
   localeDay: string;
-  transformedDistance: string;
+  transformedDistance: [string, string];
 };
 
 export type SortParamsType = { param: string; order: string };

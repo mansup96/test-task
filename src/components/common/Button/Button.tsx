@@ -27,7 +27,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   outline: none;
   cursor: pointer;
   transition: background-color ${({ theme }) => theme.defaultTransition};
-  padding: ${props => (props.square ? '0' : props.sm ? '10px' : '21px 92px')};
+  padding: ${props => (props.square ? '0' : props.sm ? '10px' : '21px 0')};
   width: ${props => (props.fullWidth ? '100%' : props.square ? '16px' : null)};
   height: ${props => (props.square ? '16px' : null)};
   max-width: 100%;

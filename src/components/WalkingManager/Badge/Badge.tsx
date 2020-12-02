@@ -91,8 +91,6 @@ const Badge = ({
     }
   };
 
-  const fromToday = (date: Date): boolean => date < new Date();
-
   const handleSave = () => {
     if (distance) {
       const walk = {
@@ -133,8 +131,8 @@ const Badge = ({
         <CustomDatePicker
           className={'input'}
           label="Дата"
-          date={date}
-          filterDate={fromToday}
+          selected={new Date(date)}
+          maxDate={new Date()}
           onChange={handleDate}
           dateFormat={'dd.MM.yyyy'}
         />

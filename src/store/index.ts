@@ -5,14 +5,16 @@ import {
   Reducer,
   CombinedState,
 } from 'redux';
-import reducer from './walkingManager/reducer';
+import managerReducer from './walkingManager/reducer';
 import thunkMiddleware from 'redux-thunk';
 import { ManagerStateTypes } from './walkingManager/actionTypes';
 
-export type RootState = { managerReducer: ManagerStateTypes };
+export type RootState = {
+  managerReducer: ManagerStateTypes;
+};
 
 const reducers: Reducer<CombinedState<RootState>> = combineReducers({
-  managerReducer: reducer,
+  managerReducer,
 });
 
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));

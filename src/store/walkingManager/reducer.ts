@@ -1,9 +1,10 @@
 import { actionTypes, ManagerStateTypes } from './actionTypes';
+import { subDays } from 'date-fns';
 
 const initialState: ManagerStateTypes = {
   walks: [],
   sortParams: {
-    date: { order: 'asc' },
+    date: { order: 'desc' },
     distance: { order: 'asc' },
   },
   paginationParams: {
@@ -16,6 +17,8 @@ const initialState: ManagerStateTypes = {
     activeWalk: null,
     isOpen: false,
   },
+  chartRange: [subDays(new Date(), 7), new Date()],
+  rangedWalks: [],
   isFetching: false,
   errorMsg: null,
 };
@@ -93,6 +96,16 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
       return {
         ...state,
         walks: [],
+      };
+    case actionTypes.set_rangedWalks:
+      return {
+        ...state,
+        rangedWalks: action.walks,
+      };
+    case actionTypes.set_range:
+      return {
+        ...state,
+        chartRange: action.chartRange,
       };
     default:
       return state;

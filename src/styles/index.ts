@@ -46,8 +46,7 @@ export const scrollBarStyle = () => css`
 
 export const fontStyle = (
   fontSize: string,
-  color: string,
-  underline = false
+  color: string
 ) => css`
   font-family: ${({ theme }) => theme.sans};
   font-style: normal;
@@ -55,11 +54,6 @@ export const fontStyle = (
   font-size: ${fontSize};
   line-height: 12px;
   color: ${color};
-
-  ${underline &&
-  css`
-    text-decoration: underline;
-  `}
 `;
 
 export const labelStyle = () => css`

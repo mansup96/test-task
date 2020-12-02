@@ -6,7 +6,7 @@ let $axios = axios.create({
   baseURL: 'http://localhost:3333/walking',
 });
 
-type GetWalksResponse = {
+type GetWalksResponseType = {
   data: Walk[];
   totalCount: number;
 };
@@ -19,7 +19,7 @@ type QueryParams = {
 };
 
 export const api = {
-  getWalks: async (queryParams: QueryParams): Promise<GetWalksResponse> => {
+  getWalks: async (queryParams: QueryParams): Promise<GetWalksResponseType> => {
     const stringifiedParams = queryString.stringify(queryParams, {
       arrayFormat: 'comma',
     });
@@ -36,4 +36,13 @@ export const api = {
     (await $axios.put(`/${id}`, walk)).data,
 
   deleteWalk: async (id: number) => (await $axios.delete(`/${id}`)).data,
+
+  getRangedWalks: async (range: {
+    date_gte: string;
+    date_lte: string;
+  }): Promise<any> => {
+    const stringifiedParams = queryString.stringify(range);
+    const response = await $axios.get(`?${stringifiedParams}`);
+    return response.data;
+  },
 };

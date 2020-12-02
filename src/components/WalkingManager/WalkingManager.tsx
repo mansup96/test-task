@@ -21,9 +21,10 @@ const ManagerWrapper = styled.div`
   width: 335px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.35);
   position: relative;
+  min-height: 580px;
 `;
 
-const WalkingManager = ({ fetchWalks, page, ...props }: PropsFromRedux) => {
+const WalkingManager = ({ fetchWalks, ...props }: PropsFromRedux) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -67,7 +68,6 @@ const WalkingManager = ({ fetchWalks, page, ...props }: PropsFromRedux) => {
 
 const mapStateToProps = (state: RootState) => ({
   managerState: state.managerReducer,
-  page: state.managerReducer.paginationParams.page,
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;

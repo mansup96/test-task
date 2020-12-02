@@ -46,16 +46,16 @@ const StyledTable = styled.ul`
     }
 
     .day {
-      ${({ theme }) => fontStyle('9px', theme.fontGray, true)}
+      ${({ theme }) => fontStyle('9px', theme.fontGray)}
     }
 
     .date {
-      ${({ theme }) => fontStyle('12px', theme.main, true)}
+      ${({ theme }) => fontStyle('12px', theme.main)}
     }
   }
 
   .distance {
-    ${({ theme }) => fontStyle('12px', theme.main, true)}
+    ${({ theme }) => fontStyle('12px', theme.main)}
   }
 
   ${scrollBarStyle()}
@@ -114,7 +114,7 @@ const Table = ({
               <span className="day">{walk.localeDay}</span>
               <span className="date">{walk.localeDate}</span>
             </div>
-            <span className="distance">{walk.transformedDistance}</span>
+            <span className="distance">{walk.transformedDistance[0]}</span>
           </li>
         ))}
       {isFetching && <Preloader />}

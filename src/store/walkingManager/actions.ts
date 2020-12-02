@@ -1,5 +1,10 @@
-import { actionTypes, MappedWalk, SortParamsType, Walk } from './actionTypes';
-
+import {
+  actionTypes,
+  ChartRangeType,
+  MappedWalk,
+  SortParamsType,
+  Walk,
+} from './actionTypes';
 import { api } from '../../api/api';
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
@@ -63,15 +68,15 @@ const declOfNum = (number: number, words: string[]): string => {
   ];
 };
 
-const getDistance = (distance: number): string => {
+const getDistance = (distance: number): [string, string] => {
   const words = ['метр', 'метра', 'метров'];
   const meters = declOfNum(distance, words);
   if (distance < 1000) {
-    return `${distance} ${meters}`;
+    return [`${distance} ${meters}`, `${distance} м.`];
   } else if (distance % 1000 === 0) {
-    return `${distance / 1000} км`;
+    return [`${distance / 1000} км`, `${distance / 1000} км`];
   } else {
-    return `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`;
+    return [`${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`, `${Math.trunc(distance / 1000)} км ${distance % 1000} м.`];
   }
 };
 
@@ -84,7 +89,7 @@ const getMappedData = (data: Walk[]): MappedWalk[] => {
     const date: Date = new Date(walk.date);
     return {
       ...walk,
-      localeDate: date.toLocaleDateString(),
+      localeDate: date.toLocaleDateString('ru'),
       localeDay: capitalizeFirstLetter(
         date.toLocaleDateString('ru', { weekday: 'long' })
       ),
@@ -224,4 +229,39 @@ export const removeWalk = (
     dispatch(reInitWalks());
     dispatch(setBadgeMode(false));
   }
+};
+
+const setRangedWalks = (walks: Walk[]) => ({
+  type: actionTypes.set_rangedWalks,
+  walks,
+});
+
+const setChartRange = (chartRange: ChartRangeType) => ({
+  type: actionTypes.set_range,
+  chartRange,
+});
+
+export const changeChartRange = (
+  chartRange: ChartRangeType
+): ThunkAction<void, RootState, unknown, Action<string>> => async dispatch => {
+  dispatch(setChartRange(chartRange));
+  dispatch(getRangedWalks());
+};
+
+export const getRangedWalks = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action<string>
+> => async (dispatch, getState) => {
+  const [start, end] = getState().managerReducer.chartRange;
+  const range = {
+    date_gte: start.toISOString(),
+    date_lte: end.toISOString(),
+    _sort: 'date',
+    _order: 'asc',
+  };
+
+  const rangedWalks = await api.getRangedWalks(range);
+  dispatch(setRangedWalks(getMappedData(rangedWalks)));
 };
