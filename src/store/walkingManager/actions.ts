@@ -76,7 +76,10 @@ const getDistance = (distance: number): [string, string] => {
   } else if (distance % 1000 === 0) {
     return [`${distance / 1000} км`, `${distance / 1000} км`];
   } else {
-    return [`${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`, `${Math.trunc(distance / 1000)} км ${distance % 1000} м.`];
+    return [
+      `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`,
+      `${Math.trunc(distance / 1000)} км ${distance % 1000} м.`,
+    ];
   }
 };
 
@@ -255,13 +258,15 @@ export const getRangedWalks = (): ThunkAction<
   Action<string>
 > => async (dispatch, getState) => {
   const [start, end] = getState().managerReducer.chartRange;
-  const range = {
-    date_gte: start.toISOString(),
-    date_lte: end.toISOString(),
-    _sort: 'date',
-    _order: 'asc',
-  };
+  if (start && end) {
+    const range = {
+      date_gte: start.toISOString(),
+      date_lte: end.toISOString(),
+      _sort: 'date',
+      _order: 'asc',
+    };
 
-  const rangedWalks = await api.getRangedWalks(range);
-  dispatch(setRangedWalks(getMappedData(rangedWalks)));
+    const rangedWalks = await api.getRangedWalks(range);
+    dispatch(setRangedWalks(getMappedData(rangedWalks)));
+  }
 };

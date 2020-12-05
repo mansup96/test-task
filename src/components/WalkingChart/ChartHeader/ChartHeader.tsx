@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
 import { ChartRangeType } from '../../../store/walkingManager/actionTypes';
-import { subDays } from 'date-fns';
-import { checkServerIdentity } from 'tls';
 
 type ChartHeaderProps = {
   range: ChartRangeType;
@@ -15,6 +13,16 @@ const StyledHeader = styled.div`
   width: 100%;
   display: flex;
 
+  .pickersWrapper {
+    display: flex;
+    .rangePicker {
+      width: 150px;
+    }
+    .rangePicker:last-child {
+      margin-left: 16px;
+    }
+  }
+
   h2 {
     font-style: normal;
     font-weight: bold;
@@ -25,15 +33,10 @@ const StyledHeader = styled.div`
 `;
 
 const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
-  const [storeStartDate, storeEndDate] = range;
+  const [storeStartDate, storeEndDate] = useMemo(() => range, [range]);
 
-  const [startDate, setStartDate] = useState(storeStartDate || null);
-  const [endDate, setEndDate] = useState(storeEndDate || null);
-  const onChange = (dates: ChartRangeType) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-  };
+  const [startDate, setStartDate] = useState(storeStartDate);
+  const [endDate, setEndDate] = useState(storeEndDate);
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -44,16 +47,29 @@ const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
   return (
     <StyledHeader>
       <h2>Суммарная активность</h2>
-      <div>
+      <div className={'pickersWrapper'}>
         <CustomDatePicker
-          label="Выберите период"
-          dateFormat="dd.MM.yyyy"
-          inline
+          className={'rangePicker'}
+          label={'Начало периода'}
+          labelColor={'main'}
+          selected={startDate}
+          onChange={(date: Date | null) => setStartDate(date)}
+          selectsStart
           startDate={startDate}
           endDate={endDate}
-          selectsRange
-          maxDate={new Date()}
-          onChange={onChange}
+          dateFormat={'dd.MM.yyyy'}
+        />
+        <CustomDatePicker
+          className={'rangePicker'}
+          labelColor={'main'}
+          label={'Конец периода'}
+          selected={endDate}
+          onChange={(date: Date | null) => setEndDate(date)}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          dateFormat={'dd.MM.yyyy'}
         />
       </div>
     </StyledHeader>

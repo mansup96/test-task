@@ -44,10 +44,7 @@ export const scrollBarStyle = () => css`
   }
 `;
 
-export const fontStyle = (
-  fontSize: string,
-  color: string
-) => css`
+export const fontStyle = (fontSize: string, color: string) => css`
   font-family: ${({ theme }) => theme.sans};
   font-style: normal;
   font-weight: normal;
@@ -56,7 +53,7 @@ export const fontStyle = (
   color: ${color};
 `;
 
-export const labelStyle = () => css`
+export const labelStyle = (color?: string) => css`
   display: block;
-  ${({ theme }) => fontStyle('12px', theme.white)}
+  ${({ theme }) => fontStyle('12px', theme[color || 'white'])}
 `;

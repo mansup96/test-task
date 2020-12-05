@@ -15,7 +15,7 @@ const StyledInput = styled.div`
   max-width: 150px;
   position: relative;
   label {
-    ${labelStyle}
+    ${labelStyle()}
   }
   input {
     width: 100%;
@@ -24,7 +24,7 @@ const StyledInput = styled.div`
   span {
     position: absolute;
     bottom: 0;
-    ${labelStyle};
+    ${labelStyle()};
     color: ${({ theme }) => theme.accent};
     font-size: 10px;
   }

@@ -43,7 +43,7 @@ export type ManagerStateTypes = {
   rangedWalks: MappedWalk[];
 };
 
-export type ChartRangeType = [Date, Date];
+export type ChartRangeType = [Date | null, Date | null];
 
 export type Walk = {
   id: number | null;

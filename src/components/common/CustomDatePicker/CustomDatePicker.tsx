@@ -9,15 +9,20 @@ import { labelStyle } from '../../../styles';
 import ru from 'date-fns/locale/ru';
 registerLocale('ru', ru);
 
-type CustomDatePickerProps = ReactDatePickerProps & {
-  label?: string;
-  tillToday?: boolean;
+type CustomDatePickerProps = ReactDatePickerProps &
+  StyledDatePickerProps & {
+    label?: string;
+    tillToday?: boolean;
+  };
+
+type StyledDatePickerProps = {
   className?: string;
+  labelColor?: string;
 };
 
-const StyledDatepicker = styled.div`
+const StyledDatepicker = styled.div<StyledDatePickerProps>`
   label {
-    ${labelStyle()}
+    ${(props) => labelStyle(props.labelColor)}
   }
   .react-datepicker__day--selected {
     background-color: ${({ theme }) => theme.accent};
@@ -26,26 +31,20 @@ const StyledDatepicker = styled.div`
   .react-datepicker-wrapper input {
     width: 100%;
   }
-  //
-  //.react-datepicker__day--outside-month {
-  //  border-radius: 0.3rem;
-  //  background-color: #e0e0e0;
-  //}
-  //.react-datepicker__day--outside-month.react-datepicker__day--disabled {
-  //  border-radius: 0;
-  //  background-color: transparent;
-  //}
 `;
 
 const CustomDatePicker = ({
   label,
-  className,
   tillToday,
+  className,
+  labelColor,
   ...props
 }: CustomDatePickerProps) => {
   const checkTillToday = (date: Date): boolean => date < new Date();
+
+  const styledProps = { className, labelColor };
   return (
-    <StyledDatepicker className={className}>
+    <StyledDatepicker {...styledProps}>
       <label>{label}</label>
       <DatePicker
         disabledKeyboardNavigation
