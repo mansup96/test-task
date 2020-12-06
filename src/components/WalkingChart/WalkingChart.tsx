@@ -25,14 +25,19 @@ const WalkingChart = ({
   rangedWalks,
   changeChartRange,
 }: PropsFromRedux) => {
+
   useEffect(() => {
     getRangedWalks();
   }, [getRangedWalks]);
 
+  const changeRangeHandler = (range: [Date | null, Date | null]) => {
+    changeChartRange(range);
+  };
+
   return (
     <StyledChart>
-      <ChartHeader range={range} onChangeRange={changeChartRange} />
-      <Chart walks={rangedWalks} />
+      <ChartHeader range={range} onChangeRange={changeRangeHandler} />
+      {rangedWalks.length > 0 && <Chart walks={rangedWalks} />}
     </StyledChart>
   );
 };

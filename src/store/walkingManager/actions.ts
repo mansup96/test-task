@@ -6,8 +6,8 @@ import {
   Walk,
 } from './actionTypes';
 import { api } from '../../api/api';
-import { ThunkAction } from 'redux-thunk';
-import { Action } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { Action, Dispatch } from 'redux';
 import { RootState } from '../index';
 
 const setBadgeMode = (isOpen: boolean) => ({
@@ -210,9 +210,29 @@ export const incrementPage = (): ThunkAction<
   }
 };
 
+const isInTheRange = (
+  walk: Walk,
+  getState: () => RootState,
+  dispatch: ThunkDispatch<any, any, any>
+) => {
+  const [start, end] = getState().managerReducer.chartRange;
+
+  if (
+    start &&
+    end &&
+    new Date(walk.date).getTime() > start.getTime() &&
+    new Date(walk.date).getTime() < end.getTime()
+  ) {
+    dispatch(getRangedWalks());
+  }
+};
+
 export const handleWalk = (
   walk: Walk
-): ThunkAction<void, RootState, unknown, Action<string>> => async dispatch => {
+): ThunkAction<void, RootState, unknown, Action<string>> => async (
+  dispatch,
+  getState
+) => {
   walk.date = new Date(walk.date).toISOString();
   if (walk.id) {
     await api.putWalk(walk, walk.id);
@@ -222,15 +242,23 @@ export const handleWalk = (
   dispatch(setActiveWalk(null));
   dispatch(reInitWalks());
   dispatch(setBadgeMode(false));
+  isInTheRange(walk, getState, dispatch);
 };
 
 export const removeWalk = (
   id: number
-): ThunkAction<void, RootState, unknown, Action<string>> => async dispatch => {
+): ThunkAction<void, RootState, unknown, Action<string>> => async (
+  dispatch,
+  getState
+) => {
   if (id) {
-    await api.deleteWalk(id);
-    dispatch(reInitWalks());
-    dispatch(setBadgeMode(false));
+    const walk = getState().managerReducer.walks.find(walk => walk.id === id);
+    if (walk) {
+      await api.deleteWalk(id);
+      dispatch(reInitWalks());
+      dispatch(setBadgeMode(false));
+      isInTheRange(walk, getState, dispatch);
+    }
   }
 };
 

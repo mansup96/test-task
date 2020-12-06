@@ -4,6 +4,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { GlobalStyle } from './styles';
 import store from './store';
+import './static/fonts/fonts.css';
 
 const Root = () => (
   <React.Fragment>

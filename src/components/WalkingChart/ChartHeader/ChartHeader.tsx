@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
 import { ChartRangeType } from '../../../store/walkingManager/actionTypes';
 
 type ChartHeaderProps = {
   range: ChartRangeType;
-  onChangeRange: (range: ChartRangeType) => void;
+  onChangeRange: (range: [Date | null, Date | null]) => void;
 };
 
 const StyledHeader = styled.div`
@@ -16,7 +16,7 @@ const StyledHeader = styled.div`
   .pickersWrapper {
     display: flex;
     .rangePicker {
-      width: 150px;
+      width: 100px;
     }
     .rangePicker:last-child {
       margin-left: 16px;
@@ -33,16 +33,21 @@ const StyledHeader = styled.div`
 `;
 
 const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
-  const [storeStartDate, storeEndDate] = useMemo(() => range, [range]);
+  const [storeStartDate, storeEndDate] = range;
 
   const [startDate, setStartDate] = useState(storeStartDate);
   const [endDate, setEndDate] = useState(storeEndDate);
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      onChangeRange([startDate, endDate]);
+  const onChange = (date: Date, type: 'start' | 'end') => {
+    if (type === 'start') {
+      setStartDate(date);
+      onChangeRange([date, endDate]);
     }
-  }, [startDate, endDate, onChangeRange]);
+    if (type === 'end') {
+      setEndDate(date);
+      onChangeRange([startDate, date]);
+    }
+  };
 
   return (
     <StyledHeader>
@@ -53,7 +58,7 @@ const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
           label={'Начало периода'}
           labelColor={'main'}
           selected={startDate}
-          onChange={(date: Date | null) => setStartDate(date)}
+          onChange={(date: Date) => onChange(date, 'start')}
           selectsStart
           startDate={startDate}
           endDate={endDate}
@@ -64,12 +69,13 @@ const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
           labelColor={'main'}
           label={'Конец периода'}
           selected={endDate}
-          onChange={(date: Date | null) => setEndDate(date)}
+          onChange={(date: Date) => onChange(date, 'end')}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
           minDate={startDate}
           dateFormat={'dd.MM.yyyy'}
+          tillToday
         />
       </div>
     </StyledHeader>

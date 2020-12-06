@@ -1,0 +1,32 @@
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./pt-sans-v12-regular.woff2') format('woff2'),
+    url('./pt-sans-v12-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('./pt-sans-v12-700.woff2') format('woff2'),
+    url('./pt-sans-v12-700.woff') format('woff');
+}
+
+/* pt-sans-caption-700 - latin */
+@font-face {
+  font-family: 'PT Sans Caption';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./pt-sans-caption-v13-regular.woff2') format('woff2'),
+    url('./pt-sans-caption-v13-regular.woff') format('woff');
+}
+/* pt-sans-caption-regular - latin */
+@font-face {
+  font-family: 'PT Sans Caption';
+  font-style: normal;
+  font-weight: 700;
+  src: url('./pt-sans-caption-v13-700.woff2') format('woff2'),
+    url('./pt-sans-caption-v13-700.woff') format('woff');
+}

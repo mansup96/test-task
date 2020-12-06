@@ -1,18 +1,5 @@
 import { createGlobalStyle, css } from 'styled-components';
 import { normalize } from 'styled-normalize';
-import { fonts } from '../static/fonts/fonts.js';
-
-export const GlobalStyle = createGlobalStyle`
-${normalize}
-
-${fonts}
-
-*, *:before, *:after {
-  box-sizing: border-box;
-  outline: none;
-},
-
-`;
 
 export const theme = {
   main: '#1C2025',
@@ -25,6 +12,16 @@ export const theme = {
   sansCaption: 'PT Sans Caption, sans-serif',
   defaultTransition: '0.2s ease',
 };
+
+export const GlobalStyle = createGlobalStyle`
+${normalize}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  outline: none;
+  font-family: ${() => theme.sans} ;
+},
+`;
 
 export const scrollBarStyle = () => css`
   ::-webkit-scrollbar {

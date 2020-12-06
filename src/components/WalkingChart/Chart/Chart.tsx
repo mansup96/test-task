@@ -1,20 +1,30 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import styled from 'styled-components';
 import { MappedWalk } from '../../../store/walkingManager/actionTypes';
 import {
   CartesianGrid,
+  Coordinate,
   Line,
   LineChart,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
+import CustomizedLabel from './CustomLabel/CustomLabel';
+import CustomTooltip from './CustomTooltip/CustomTooltip';
+import CustomActiveDot from './CustomActiveDot/CustomActiveDot';
 import { theme } from '../../../styles';
-import styled from 'styled-components';
+
 type ChartProps = {
   walks: MappedWalk[];
 };
 
-const ChartWrapper = styled.div``;
+export type PositionType = { x: number; y: number; index: number };
+
+const ChartWrapper = styled.div`
+  margin-top: 130px;
+`;
 
 const tickStyle = {
   fontFamily: theme.sansCaption,
@@ -53,61 +63,65 @@ const getTicksByDistance = (walks: MappedWalk[]): number[] => {
 };
 
 const Chart = ({ walks }: ChartProps) => {
-
-  const memoizedWalks = useMemo(() => walks, [walks])
-  const CustomizedLabel = (props: any) => {
-    const { x, y, index } = props;
-
-    const transformedDistance = walks[index].transformedDistance[1];
-
-    return (
-      <text
-        x={x}
-        y={y}
-        dy={-10}
-        fontSize={14}
-        textAnchor="middle"
-        color={theme.accent}
-        fontFamily={theme.sans}
-      >
-        {transformedDistance}
-      </text>
-    );
-  };
-
   const ticks = useMemo(() => getTicksByDistance(walks), [walks]);
+
+  const [activeCoords, setActiveCoords] = useState({
+    x: 100,
+    y: 100,
+    index: 100,
+  });
+
+  const onActiveChange = (coords: Coordinate, index: number) => {
+    if (index !== activeCoords.index) {
+      setActiveCoords({ ...coords, index });
+    }
+  };
 
   return (
     <ChartWrapper>
-      {walks && (
-        <LineChart width={768} height={210} data={memoizedWalks}>
-          <XAxis
-            dataKey="localeDate"
-            padding={{ left: 40, right: 40 }}
-            tickLine={false}
-            tick={{ ...tickStyle, fontSize: 8 }}
-          />
-          <YAxis
-            width={20}
-            interval={'preserveStartEnd'}
-            ticks={ticks}
-            axisLine={false}
-            tickLine={false}
-            tick={{ ...tickStyle, fontSize: 10 }}
-          />
-          <CartesianGrid stroke="#ccc" />
-          <Tooltip />
-          <Line
-              isAnimationActive={false}
-            dataKey="distance"
-            stroke={theme.accent}
-            dot={{ fill: theme.accent, r: 5 }}
-            activeDot={{ r: 10 }}
-            strokeWidth={2}
-            label={CustomizedLabel}
-          />
-        </LineChart>
-      )}
+      <LineChart
+        width={768}
+        height={300}
+        data={walks}
+        margin={{ left: 0, right: 0 }}
+      >
+        <XAxis
+          dataKey="localeDate"
+          padding={{ left: 40, right: 40 }}
+          tickLine={false}
+          tick={{ ...tickStyle, fontSize: 8 }}
+        />
+        <YAxis
+          width={25}
+          interval={'preserveStartEnd'}
+          ticks={ticks}
+          axisLine={false}
+          tickLine={false}
+          tick={{ ...tickStyle, fontSize: 10 }}
+        />
+        <CartesianGrid stroke={theme.main} opacity={0.1} />
+        <Tooltip
+          position={{ x: activeCoords.x, y: activeCoords.y }}
+          offset={0}
+          active={true}
+          allowEscapeViewBox={{ x: true, y: true }}
+          content={(props: TooltipProps) => CustomTooltip(props)}
+        />
+        <Line
+          dataKey="distance"
+          stroke={theme.accent}
+          dot={{ fill: theme.accent, r: 5 }}
+          activeDot={
+            <CustomActiveDot
+              strokeWidth={0}
+              r={10}
+              onActiveChange={onActiveChange}
+            />
+          }
+          strokeWidth={2}
+          label={(props: any) => CustomizedLabel(props, walks)}
+        />
+      </LineChart>
     </ChartWrapper>
   );
 };

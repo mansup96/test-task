@@ -48,7 +48,7 @@ export type ChartRangeType = [Date | null, Date | null];
 export type Walk = {
   id: number | null;
   distance: number;
-  date: number | string | Date;
+  date: string | Date;
 };
 
 export type MappedWalk = Walk & {
