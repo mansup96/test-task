@@ -6,7 +6,7 @@ export const actionTypes = {
   set_error: 'manager/set_error',
   clear_error: 'manager/clear_error',
   set_batch_mode: 'manager/set_batch_mode',
-  set_active_walk: 'manager/set_active_walk',
+  set_selected_walk: 'manager/set_selected_walk',
   set_total_count: 'manager/set_total_count',
   set_page: 'manager/set_page',
   clean_walks: 'manager/clean_walks',
@@ -21,7 +21,7 @@ export type StateSortParams = {
   distance: { order: SortOrderType };
 };
 export type BadgeType = {
-  activeWalk: MappedWalk | null;
+  selectedWalk: MappedWalk | null;
   isOpen: boolean;
 };
 

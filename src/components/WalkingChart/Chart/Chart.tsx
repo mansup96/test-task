@@ -17,6 +17,8 @@ import { theme } from '../../../styles';
 
 type ChartProps = {
   walks: MappedWalk[];
+  setBadgeMode: (isOpen: boolean) => void;
+  handleBadgeAction: (id: number, from: 'chart') => void;
 };
 
 const ChartWrapper = styled.div`
@@ -29,24 +31,6 @@ const tickStyle = {
   color: '#000000',
 };
 
-// const sumDistance = (walks: MappedWalk[]): MappedWalk[] => {
-//   const result: MappedWalk[] = [];
-//
-//   walks.forEach(walk => {
-//     const sameDated = result.find(
-//       walkInResult => walkInResult.date === walk.date
-//     );
-//     if (!sameDated) {
-//       result.push(walk);
-//     } else {
-//       sameDated.distance += walk.distance;
-//     }
-//   });
-//
-//   return result;
-// };
-//
-// const checkedWalks = sumDistance(walks);
 const getTooltipPosition = (
   dotCoords: Coordinate,
   viewBoxWidth: number,
@@ -80,7 +64,7 @@ const getTicksByDistance = (walks: MappedWalk[]): number[] => {
   return result;
 };
 
-const Chart = ({ walks }: ChartProps) => {
+const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
   const ticks = useMemo(() => getTicksByDistance(walks), [walks]);
 
   const [activeDotCoords, setActiveDotCoords] = useState({
@@ -103,6 +87,14 @@ const Chart = ({ walks }: ChartProps) => {
     if (index !== activeIndex) {
       setActiveDotCoords({ ...coords });
       setActiveIndex(index);
+    }
+  };
+
+  const handleDotClick = (index: number) => {
+    const walkId = walks[index].id;
+    if (walkId) {
+      setBadgeMode(true);
+      handleBadgeAction(walkId, 'chart');
     }
   };
 
@@ -152,9 +144,7 @@ const Chart = ({ walks }: ChartProps) => {
               r={10}
               cursor={'pointer'}
               onActiveChange={onChangeActiveDot}
-              onClick={(props: any) => {
-                debugger;
-              }}
+              onClick={(index: number) => handleDotClick(index)}
             />
           }
           strokeWidth={2}

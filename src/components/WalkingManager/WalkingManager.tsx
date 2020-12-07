@@ -6,7 +6,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   changeWalksOrder,
   changeWalksSort,
-  handleBadge,
+  handleBadgeAction,
+  setBadgeMode,
   handleWalk,
   removeWalk,
   setPage,
@@ -43,21 +44,25 @@ const WalkingManager = ({ fetchWalks, ...props }: PropsFromRedux) => {
         incrementPage={props.incrementPage}
         walks={props.managerState.walks}
         setPage={props.setPage}
-        handleBadge={props.handleBadge}
+        handleBadgeAction={props.handleBadgeAction}
+        setBadgeMode={props.setBadgeMode}
         isFetching={props.managerState.isFetching}
         error={props.managerState.errorMsg}
       />
       <Badge
         badge={props.managerState.badge}
         btnRef={buttonRef}
-        handleBadge={props.handleBadge}
+        setBadgeMode={props.setBadgeMode}
         handleWalk={props.handleWalk}
         removeWalk={props.removeWalk}
       />
       <Button
         ref={buttonRef}
         fullWidth
-        onClick={() => props.handleBadge(true, null)}
+        onClick={() => {
+          props.setBadgeMode(true);
+          props.handleBadgeAction(null);
+        }}
         disabled={props.managerState.badge.isOpen}
       >
         Добавить запись
@@ -75,7 +80,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 const connector = connect(mapStateToProps, {
   changeWalksSort,
   changeWalksOrder,
-  handleBadge,
+  handleBadgeAction,
+  setBadgeMode,
   handleWalk,
   removeWalk,
   setPage,

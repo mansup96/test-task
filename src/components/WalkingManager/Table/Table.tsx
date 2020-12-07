@@ -64,7 +64,8 @@ const StyledTable = styled.ul`
 type TableProps = {
   walks: MappedWalk[];
   incrementPage: () => void;
-  handleBadge: (isOpen: boolean, id?: number | null) => void;
+  handleBadgeAction: (id: number | null) => void;
+  setBadgeMode: (isOpen: boolean) => void;
   setPage: (page: number) => void;
   isFetching: boolean;
   error?: string | null;
@@ -73,8 +74,9 @@ type TableProps = {
 const Table = ({
   walks,
   isFetching,
-  handleBadge,
+  handleBadgeAction,
   incrementPage,
+  setBadgeMode,
 }: TableProps) => {
   const lastListItem = useRef<HTMLLIElement>(null);
 
@@ -101,13 +103,18 @@ const Table = ({
     };
   }, [walks, incrementPage]);
 
+  const handleClick = (id: number | null /*todo: remove null*/) => {
+    handleBadgeAction(id);
+    setBadgeMode(true);
+  };
+
   return (
     <StyledTable id="table">
       {walks.length > 0 &&
         walks.map((walk, i) => (
           <li
             key={walk.id}
-            onClick={() => handleBadge(true, walk.id)}
+            onClick={() => handleClick(walk.id)}
             ref={i === walks.length - 1 ? lastListItem : null}
           >
             <div className="dateWrapper">

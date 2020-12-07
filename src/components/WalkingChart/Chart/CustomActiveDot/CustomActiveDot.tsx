@@ -13,8 +13,8 @@ const CustomActiveDot = ({
   }, [cx, cy, index, onActiveChange]);
 
   const handleClick = () => {
-    onClick(index)
-  }
+    onClick(index);
+  };
 
   return <circle onClick={handleClick} {...props} />;
 };

@@ -14,7 +14,7 @@ const initialState: ManagerStateTypes = {
   },
   activeParam: 'date',
   badge: {
-    activeWalk: null,
+    selectedWalk: null,
     isOpen: false,
   },
   chartRange: [subDays(new Date(), 7), new Date()],
@@ -68,12 +68,12 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           isOpen: action.isOpen,
         },
       };
-    case actionTypes.set_active_walk:
+    case actionTypes.set_selected_walk:
       return {
         ...state,
         badge: {
           ...state.badge,
-          activeWalk: action.walk,
+          selectedWalk: action.walk,
         },
       };
     case actionTypes.set_total_count:

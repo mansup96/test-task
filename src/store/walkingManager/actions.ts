@@ -10,15 +10,15 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { RootState } from '../index';
 
-const setBadgeMode = (isOpen: boolean) => ({
+export const setBadgeMode = (isOpen: boolean) => ({
   type: actionTypes.set_batch_mode,
   isOpen,
 });
 
-const setActiveWalk = (
+const setSelectedWalk = (
   walk: MappedWalk | null
 ): { type: string; walk: MappedWalk | null } => ({
-  type: actionTypes.set_active_walk,
+  type: actionTypes.set_selected_walk,
   walk,
 });
 
@@ -131,7 +131,7 @@ export const fetchWalks = (): ThunkAction<
       dispatch(setWalks(mappedData));
       dispatch(setTotalCount(resp.totalCount));
     })
-    .catch(err => {
+    .catch(() => {
       dispatch(setError('Ошибка'));
     });
 
@@ -160,25 +160,26 @@ export const changeWalksOrder = ({
   }
 };
 
-export const handleBadge = (
-  isOpen: boolean,
-  id?: number | null
+export const handleBadgeAction = (
+  id: number | null,
+  from: 'table' | 'chart' = 'table'
 ): ThunkAction<void, RootState, unknown, Action<string>> => (
   dispatch,
   getState
 ) => {
-  if (id !== undefined) {
-    const activeWalk = getState().managerReducer.walks.find(
-      walk => walk.id === id
-    );
-    if (activeWalk) {
-      dispatch(setActiveWalk(JSON.parse(JSON.stringify(activeWalk))));
+  if (id) {
+    const selectedWalk =
+      from === 'table'
+        ? getState().managerReducer.walks.find(walk => walk.id === id)
+        : getState().managerReducer.rangedWalks.find(walk => walk.id === id);
+    if (selectedWalk) {
+      dispatch(setSelectedWalk(selectedWalk));
     } else {
-      dispatch(setActiveWalk(null));
+      throw Error('Ошибка синхронизации прогулок');
     }
+  } else {
+    dispatch(setSelectedWalk(null));
   }
-
-  dispatch(setBadgeMode(isOpen));
 };
 
 const reInitWalks = (): ThunkAction<
@@ -237,9 +238,9 @@ export const handleWalk = (
   if (walk.id) {
     await api.putWalk(walk, walk.id);
   } else {
-    await api.postWalk(walk).then(resp => {});
+    await api.postWalk(walk);
   }
-  dispatch(setActiveWalk(null));
+  dispatch(setSelectedWalk(null));
   dispatch(reInitWalks());
   dispatch(setBadgeMode(false));
   isInTheRange(walk, getState, dispatch);

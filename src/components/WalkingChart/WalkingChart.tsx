@@ -6,6 +6,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   changeChartRange,
   getRangedWalks,
+  setBadgeMode,
+  handleBadgeAction,
 } from '../../store/walkingManager/actions';
 import Chart from './Chart/Chart';
 
@@ -24,8 +26,9 @@ const WalkingChart = ({
   range,
   rangedWalks,
   changeChartRange,
+  handleBadgeAction,
+  setBadgeMode,
 }: PropsFromRedux) => {
-
   useEffect(() => {
     getRangedWalks();
   }, [getRangedWalks]);
@@ -37,7 +40,13 @@ const WalkingChart = ({
   return (
     <StyledChart>
       <ChartHeader range={range} onChangeRange={changeRangeHandler} />
-      {rangedWalks.length > 0 && <Chart walks={rangedWalks} />}
+      {rangedWalks.length > 0 && (
+        <Chart
+          walks={rangedWalks}
+          handleBadgeAction={handleBadgeAction}
+          setBadgeMode={setBadgeMode}
+        />
+      )}
     </StyledChart>
   );
 };
@@ -52,6 +61,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 const connector = connect(mapStateToProps, {
   getRangedWalks,
   changeChartRange,
+  setBadgeMode,
+  handleBadgeAction,
 });
 
 export default connector(WalkingChart);
