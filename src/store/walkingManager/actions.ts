@@ -7,7 +7,7 @@ import {
 } from './actionTypes';
 import { api } from '../../api/api';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { Action, Dispatch } from 'redux';
+import { Action } from 'redux';
 import { RootState } from '../index';
 
 const setBadgeMode = (isOpen: boolean) => ({

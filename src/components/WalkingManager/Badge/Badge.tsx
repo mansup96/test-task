@@ -86,11 +86,12 @@ const Badge = ({
   const handleDistance = (value: string) => {
     if (!value || Number(value) <= 0) {
       setError('Введите корректные данные');
-      setDistance(value);
+    } else if (Number(value) > 300000) {
+      setError('Не надо врать');
     } else {
-      setDistance(value);
       setError('');
     }
+    setDistance(value);
   };
 
   const handleSave = () => {
@@ -144,6 +145,7 @@ const Badge = ({
           type="number"
           label="Дистанция (м)"
           value={distance}
+          min={'0'}
           onChangeValue={handleDistance}
           error={error}
           step={'100'}

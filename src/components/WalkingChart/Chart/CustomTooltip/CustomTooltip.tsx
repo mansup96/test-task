@@ -1,21 +1,57 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TooltipProps } from 'recharts';
 import styled, { css } from 'styled-components';
+import { MappedWalk } from '../../../../store/walkingManager/actionTypes';
 
 type ContentWrapperProps = {
   triangleSide?: 'left' | 'right';
 };
 
+export type Size = {
+  height?: number;
+  width?: number;
+};
+
+type CustomTooltipProps = TooltipProps & {
+  onChangePosition: (width: number, tooltipWrapperSize: Size) => void;
+};
+
 const ContentWrapper = styled.div<ContentWrapperProps>`
   width: 150px;
-  height: 120px;
+  height: 90px;
   background-color: ${({ theme }) => theme.white};
+  padding: 10px;
   border-radius: 5px 5px
     ${({ triangleSide }) => (triangleSide === 'left' ? '5px 0' : '0 5px')};
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   position: relative;
+  
+  .day {
+    display: block;
+    font-family: ${({ theme }) => theme.sansCaptions};
+    color: ${({ theme }) => theme.main};
+    font-size: 10px;
+  }
+  .date {
+    display: block;
+    font-family: ${({ theme }) => theme.sansCaptions};
+    color: ${({ theme }) => theme.main};
+    opacity: 0.4;
+    font-size: 14px;
+  }
+  
+  .distance {
+    margin-top: 7px;
+    text-align: center;
+    font-family: ${({ theme }) => theme.sansCaptions};
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 31px;
+  }
+  
 
-  .triangle-with-shadow {
+  .triangleWithShadow {
     position: absolute;
     width: 30px;
     height: 30px;
@@ -68,19 +104,51 @@ const getTriangleSide = (
   return 'left';
 };
 
-const CustomTooltip = (props: TooltipProps) => {
-  const { payload, active, viewBox, coordinate } = props;
-  // console.log(props)
+const CustomTooltip = ({
+  payload,
+  active,
+  viewBox,
+  coordinate,
+  onChangePosition,
+}: CustomTooltipProps) => {
+  const viewBoxWidth = viewBox?.width;
+
+  const wrapper = useRef<HTMLDivElement>(null);
+  const { current: divNode } = wrapper;
+
+  const [wrapperSize, setWrapperSize] = useState<Size>({
+    height: 0,
+    width: 0,
+  });
+
+  useEffect(() => {
+    if (divNode) {
+      setWrapperSize({
+        height: wrapper?.current?.getBoundingClientRect().height,
+        width: wrapper?.current?.getBoundingClientRect().width,
+      });
+    }
+  }, [divNode]);
+
+  useEffect(() => {
+    if (wrapper.current) {
+      onChangePosition(viewBoxWidth || 0, wrapperSize);
+    }
+  }, [viewBoxWidth, onChangePosition, wrapperSize]);
 
   if (active && payload) {
+    const walkInfo: MappedWalk = payload[0].payload;
     return (
       <ContentWrapper
+        ref={wrapper}
         triangleSide={getTriangleSide(viewBox?.width, coordinate?.x)}
       >
         <div className={'dateWrapper'}>
-          <p>{payload[0].name}</p>
+          <span className={'day'}>{walkInfo.localeDay}</span>
+          <span className={'date'}>{walkInfo.localeDate}</span>
+          <p className={'distance'}>{walkInfo.transformedDistance[1]}</p>
         </div>
-        <div className={'triangle-with-shadow'} />
+        <div className={'triangleWithShadow'} />
       </ContentWrapper>
     );
   }

@@ -7,20 +7,17 @@ import {
   Line,
   LineChart,
   Tooltip,
-  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
 import CustomizedLabel from './CustomLabel/CustomLabel';
-import CustomTooltip from './CustomTooltip/CustomTooltip';
+import CustomTooltip, { Size } from './CustomTooltip/CustomTooltip';
 import CustomActiveDot from './CustomActiveDot/CustomActiveDot';
 import { theme } from '../../../styles';
 
 type ChartProps = {
   walks: MappedWalk[];
 };
-
-export type PositionType = { x: number; y: number; index: number };
 
 const ChartWrapper = styled.div`
   margin-top: 130px;
@@ -50,6 +47,27 @@ const tickStyle = {
 // };
 //
 // const checkedWalks = sumDistance(walks);
+const getTooltipPosition = (
+  dotCoords: Coordinate,
+  viewBoxWidth: number,
+  tooltipWrapperSize: Size
+): Coordinate => {
+  const { x: dotX, y: dotY } = dotCoords;
+  const { height: tooltipHeight, width: tooltipWidth } = tooltipWrapperSize;
+  const triangleHeight = 17;
+  const offset = 25;
+
+  if (tooltipHeight && tooltipWidth) {
+    if (dotX + tooltipWidth > viewBoxWidth) {
+      return {
+        x: dotX - tooltipWidth,
+        y: dotY - tooltipHeight - triangleHeight - offset,
+      };
+    }
+    return { x: dotX, y: dotY - tooltipHeight - triangleHeight - offset };
+  }
+  return { x: 0, y: 0 };
+};
 
 const getTicksByDistance = (walks: MappedWalk[]): number[] => {
   const distances = Array.from(walks, walk => walk.distance);
@@ -65,15 +83,26 @@ const getTicksByDistance = (walks: MappedWalk[]): number[] => {
 const Chart = ({ walks }: ChartProps) => {
   const ticks = useMemo(() => getTicksByDistance(walks), [walks]);
 
-  const [activeCoords, setActiveCoords] = useState({
-    x: 100,
-    y: 100,
-    index: 100,
+  const [activeDotCoords, setActiveDotCoords] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [viewBoxWidth, setViewBoxWidth] = useState(0);
+  const [tooltipWrapperSize, setTooltipWrapperSize] = useState<Size>({
+    height: 0,
+    width: 0,
   });
 
-  const onActiveChange = (coords: Coordinate, index: number) => {
-    if (index !== activeCoords.index) {
-      setActiveCoords({ ...coords, index });
+  const recordViewBoxWidth = (width: number, tooltipWrapperSize: Size) => {
+    setTooltipWrapperSize(tooltipWrapperSize);
+    setViewBoxWidth(width);
+  };
+
+  const onChangeActiveDot = (coords: Coordinate, index: number) => {
+    if (index !== activeIndex) {
+      setActiveDotCoords({ ...coords });
+      setActiveIndex(index);
     }
   };
 
@@ -84,6 +113,7 @@ const Chart = ({ walks }: ChartProps) => {
         height={300}
         data={walks}
         margin={{ left: 0, right: 0 }}
+        throttleDelay={100}
       >
         <XAxis
           dataKey="localeDate"
@@ -92,20 +122,25 @@ const Chart = ({ walks }: ChartProps) => {
           tick={{ ...tickStyle, fontSize: 8 }}
         />
         <YAxis
-          width={25}
+          width={35}
           interval={'preserveStartEnd'}
           ticks={ticks}
           axisLine={false}
           tickLine={false}
+          domain={['dataMin', 'dataMax + 100']}
           tick={{ ...tickStyle, fontSize: 10 }}
         />
         <CartesianGrid stroke={theme.main} opacity={0.1} />
         <Tooltip
-          position={{ x: activeCoords.x, y: activeCoords.y }}
+          position={getTooltipPosition(
+            activeDotCoords,
+            viewBoxWidth,
+            tooltipWrapperSize
+          )}
           offset={0}
           active={true}
           allowEscapeViewBox={{ x: true, y: true }}
-          content={(props: TooltipProps) => CustomTooltip(props)}
+          content={<CustomTooltip onChangePosition={recordViewBoxWidth} />}
         />
         <Line
           dataKey="distance"
@@ -115,7 +150,11 @@ const Chart = ({ walks }: ChartProps) => {
             <CustomActiveDot
               strokeWidth={0}
               r={10}
-              onActiveChange={onActiveChange}
+              cursor={'pointer'}
+              onActiveChange={onChangeActiveDot}
+              onClick={(props: any) => {
+                debugger;
+              }}
             />
           }
           strokeWidth={2}
