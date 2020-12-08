@@ -102,10 +102,12 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
 
   return (
     <ChartWrapper
-      onMouseOver={() => {
+      onMouseEnter={() => {
+        console.log(123)
         setTooltipActive(true);
       }}
-      onMouseOut={() => {
+      onMouseLeave={() => {
+        console.log(1235234523)
         setTooltipActive(false);
       }}
     >

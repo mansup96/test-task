@@ -44,7 +44,7 @@ export const getMappedData = (data: Walk[]): MappedWalk[] => {
 
 export const isInTheRange = (
   walk: Walk | CreatedWalk,
-  getState: () => RootState,
+  getState: () => RootState
 ): boolean => {
   const [start, end] = getState().managerReducer.chartRange;
 

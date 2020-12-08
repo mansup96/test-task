@@ -55,7 +55,7 @@ export type CreatedWalk = {
   distance: number;
   date: string;
   id: null;
-}
+};
 
 export type MappedWalk = Walk & {
   localeDate: string;
