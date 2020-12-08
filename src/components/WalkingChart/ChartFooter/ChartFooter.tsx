@@ -1,5 +1,4 @@
 import React from 'react';
-import { MappedWalk } from '../../../store/walkingManager/types';
 import styled, { css } from 'styled-components';
 
 type ChartFooterProps = {
