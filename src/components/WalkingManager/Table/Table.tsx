@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { fontStyle, scrollBarStyle } from '../../../styles';
-import { MappedWalk } from '../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../store/walkingManager/types';
 import Preloader from '../../common/Preloader/Preloader';
 
 const StyledTable = styled.ul`

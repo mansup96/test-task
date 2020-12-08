@@ -1,15 +1,19 @@
 import React, { RefObject, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { Button } from '../../common/Button/Button';
+import {
+  BadgeType,
+  CreatedWalk,
+  Walk,
+} from '../../../store/walkingManager/types';
+import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BadgeType, Walk } from '../../../store/walkingManager/actionTypes';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
 
 type BadgeProps = {
   badge: BadgeType;
   btnRef: RefObject<HTMLButtonElement>;
   setBadgeMode: (isOpen: boolean) => void;
-  handleWalk: (walk: Walk, id?: number) => void;
+  handleWalkAction: (walk: Walk | CreatedWalk, id?: number) => void;
   removeWalk: (id: number) => void;
 };
 
@@ -66,13 +70,13 @@ const StyledBadge = styled.div<StyledBadgeProps>`
 const Badge = ({
   badge,
   btnRef,
-  handleWalk,
+  handleWalkAction,
   setBadgeMode,
   removeWalk,
 }: BadgeProps) => {
   const btnHeight = btnRef?.current?.getBoundingClientRect().height ?? 0;
   const [date, setDate] = useState(
-    badge.selectedWalk?.date || new Date(new Date().setHours(0, 0, 0, 0))
+    new Date(badge.selectedWalk?.date || new Date().setHours(0, 0, 0, 0))
   );
   const [distance, setDistance] = useState(
     badge.selectedWalk?.distance.toString() || ''
@@ -81,7 +85,7 @@ const Badge = ({
 
   useEffect(() => {
     setDate(
-      badge.selectedWalk?.date || new Date(new Date().setHours(0, 0, 0, 0))
+      new Date(badge.selectedWalk?.date || new Date().setHours(0, 0, 0, 0))
     );
     setDistance(badge.selectedWalk?.distance.toString() || '');
   }, [badge.selectedWalk]);
@@ -105,10 +109,10 @@ const Badge = ({
     if (distance) {
       const walk = {
         id: badge.selectedWalk?.id ? badge.selectedWalk.id : null,
-        date,
+        date: date.toISOString(),
         distance: Number(distance),
       };
-      handleWalk(walk);
+      handleWalkAction(walk);
       setDistance('');
       setDate(new Date(new Date().setHours(0, 0, 0, 0)));
     } else {

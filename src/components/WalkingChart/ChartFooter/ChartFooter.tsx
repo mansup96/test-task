@@ -1,14 +1,13 @@
 import React from 'react';
-import { MappedWalk } from '../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../store/walkingManager/types';
 import styled, { css } from 'styled-components';
 
 type ChartFooterProps = {
-  walks: MappedWalk[];
+  extremums: string[];
+  sum: string;
 };
 
 const footerSpanStyle = css`
-  display: flex;
-  align-items: center;
   font-family: ${({ theme }) => theme.sansCaption};
   color: ${({ theme }) => theme.white};
   font-weight: bold;
@@ -21,9 +20,10 @@ const StyledChartFooter = styled.div`
   padding: 0 20px;
   min-height: 60px;
   width: 100%;
-  
+
   .extremumWrapper {
     display: flex;
+    align-items: center;
   }
 
   .extremum {
@@ -32,20 +32,33 @@ const StyledChartFooter = styled.div`
   }
 
   .sum {
-    ${footerSpanStyle};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin-left: auto;
     width: 210px;
+
+    span {
+      display: block;
+      text-align: right;
+      ${footerSpanStyle};
+    }
   }
 `;
 
-export const ChartFooter = ({ walks }: ChartFooterProps) => {
+export const ChartFooter = ({ extremums, sum }: ChartFooterProps) => {
   return (
     <StyledChartFooter>
       <div className="extremumWrapper">
-        <span className="extremum">Минимум: 200м</span>
-        <span className="extremum">Максимум: 500м</span>
+        <span className="extremum">Минимум: {extremums[0]}</span>
+        <span className="extremum">Максимум: {extremums[1]}</span>
       </div>
-      <span className="sum">За весь период: 2000м</span>
+      <div className="sum">
+        <span>За весь период:</span>
+        <span>{sum}</span>
+      </div>
     </StyledChartFooter>
   );
 };
+
+export default ChartFooter;

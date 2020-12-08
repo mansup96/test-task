@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import SortElement from '../../common/SortElement/SortElement';
 import {
-  ActiveParamType,
+  ActiveSortParamType,
   SortOrderType,
   SortParamsType,
   StateSortParams,
-} from '../../../store/walkingManager/actionTypes';
+} from '../../../store/walkingManager/types';
 
 const ManagerHeaderWrapper = styled.div`
   background-color: ${({ theme }) => theme.main};
@@ -15,7 +15,7 @@ const ManagerHeaderWrapper = styled.div`
 `;
 
 type ManagerHeaderProps = {
-  activeParam: ActiveParamType;
+  activeParam: ActiveSortParamType;
   sortParams: StateSortParams;
   onChangeWalksOrder: ({ param, order }: SortParamsType) => void;
   onChangeWalksSort: (param: string) => void;

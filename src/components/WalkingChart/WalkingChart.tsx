@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { RootState } from '../../store';
-import ChartHeader from './ChartHeader/ChartHeader';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   changeChartRange,
@@ -9,8 +8,14 @@ import {
   setBadgeMode,
   handleBadgeAction,
 } from '../../store/walkingManager/actions';
+import {
+  getDistanceSum,
+  getExtremums,
+  getMappedRangedWalks,
+} from '../../store/walkingManager/selectors';
+import ChartHeader from './ChartHeader/ChartHeader';
 import Chart from './Chart/Chart';
-import { ChartFooter } from './ChartFooter/ChartFooter';
+import ChartFooter from './ChartFooter/ChartFooter';
 
 const StyledChart = styled.div`
   display: flex;
@@ -31,6 +36,8 @@ const StyledChart = styled.div`
 const WalkingChart = ({
   getRangedWalks,
   range,
+  sum,
+  extremums,
   rangedWalks,
   changeChartRange,
   handleBadgeAction,
@@ -56,14 +63,16 @@ const WalkingChart = ({
           />
         )}
       </div>
-      <ChartFooter walks={rangedWalks} />
+      <ChartFooter extremums={extremums} sum={sum} />
     </StyledChart>
   );
 };
 
 const mapStateToProps = (state: RootState) => ({
   range: state.managerReducer.chartRange,
-  rangedWalks: state.managerReducer.rangedWalks,
+  rangedWalks: getMappedRangedWalks(state),
+  extremums: getExtremums(state),
+  sum: getDistanceSum(state),
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;

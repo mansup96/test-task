@@ -1,105 +1,65 @@
 import {
-  actionTypes,
+  types,
   ChartRangeType,
-  MappedWalk,
+  CreatedWalk,
   SortParamsType,
   Walk,
-} from './actionTypes';
+} from './types';
 import { api } from '../../api/api';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 import { RootState } from '../index';
+import { isInTheRange } from '../utils';
 
 export const setBadgeMode = (isOpen: boolean) => ({
-  type: actionTypes.set_batch_mode,
+  type: types.set_batch_mode,
   isOpen,
 });
 
 const setSelectedWalk = (
-  walk: MappedWalk | null
-): { type: string; walk: MappedWalk | null } => ({
-  type: actionTypes.set_selected_walk,
+  walk: Walk | null
+): { type: string; walk: Walk | null } => ({
+  type: types.set_selected_walk,
   walk,
 });
 
 const setActiveParam = (param: string) => ({
-  type: actionTypes.set_active_param,
+  type: types.set_active_param,
   param,
 });
 
 const setSortOrder = ({ param, order }: SortParamsType) => ({
-  type: actionTypes.set_sort_order,
+  type: types.set_sort_order,
   param,
   order,
 });
 
-const cleanWalks = () => ({ type: actionTypes.clean_walks });
+const cleanWalks = () => ({ type: types.clean_walks });
 
-const setWalks = (walks: MappedWalk[]) => ({
-  type: actionTypes.set_walks,
+const setWalks = (walks: Walk[]) => ({
+  type: types.set_walks,
   walks,
 });
 
 const setFetching = (value: boolean) => ({
-  type: actionTypes.set_fetching,
+  type: types.set_fetching,
   value,
 });
 
 const setTotalCount = (count: number) => ({
-  type: actionTypes.set_total_count,
+  type: types.set_total_count,
   count,
 });
 
 export const setPage = (page: number) => ({
-  type: actionTypes.set_page,
+  type: types.set_page,
   page,
 });
 
-const setError = (value: string) => ({ type: actionTypes.set_error, value });
+const setError = (value: string) => ({ type: types.set_error, value });
 
 // eslint-disable-next-line no-unused-vars
-const clearError = (value: any) => ({ type: actionTypes.clear_error, value });
-
-const declOfNum = (number: number, words: string[]): string => {
-  return words[
-    number % 100 > 4 && number % 100 < 20
-      ? 2
-      : [2, 0, 1, 1, 1, 2][number % 10 < 5 ? number % 10 : 5]
-  ];
-};
-
-const getDistance = (distance: number): [string, string] => {
-  const words = ['метр', 'метра', 'метров'];
-  const meters = declOfNum(distance, words);
-  if (distance < 1000) {
-    return [`${distance} ${meters}`, `${distance} м.`];
-  } else if (distance % 1000 === 0) {
-    return [`${distance / 1000} км`, `${distance / 1000} км`];
-  } else {
-    return [
-      `${Math.trunc(distance / 1000)} км ${distance % 1000} ${meters}`,
-      `${Math.trunc(distance / 1000)} км ${distance % 1000} м.`,
-    ];
-  }
-};
-
-const capitalizeFirstLetter = (string: string): string => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-const getMappedData = (data: Walk[]): MappedWalk[] => {
-  return data.map(walk => {
-    const date: Date = new Date(walk.date);
-    return {
-      ...walk,
-      localeDate: date.toLocaleDateString('ru'),
-      localeDay: capitalizeFirstLetter(
-        date.toLocaleDateString('ru', { weekday: 'long' })
-      ),
-      transformedDistance: getDistance(walk.distance),
-    };
-  });
-};
+const clearError = (value: any) => ({ type: types.clear_error, value });
 
 export const fetchWalks = (): ThunkAction<
   void,
@@ -109,31 +69,28 @@ export const fetchWalks = (): ThunkAction<
 > => async (dispatch, getState) => {
   dispatch(setFetching(true));
 
-  const { sortParams, activeParam } = getState().managerReducer;
+  const { sortParams, activeSortParam } = getState().managerReducer;
   const { page, limit } = getState().managerReducer.paginationParams;
 
   const queryParams = {
-    _sort: [activeParam, activeParam === 'date' ? 'distance' : 'date'],
+    _sort: [activeSortParam, activeSortParam === 'date' ? 'distance' : 'date'],
     _order: [
-      sortParams[activeParam].order,
-      activeParam === 'date'
+      sortParams[activeSortParam].order,
+      activeSortParam === 'date'
         ? sortParams['distance'].order
         : sortParams['date'].order,
     ],
     _page: page,
     _limit: limit,
   };
+  try {
+    const respFromApi = await api.getWalks(queryParams);
 
-  await api
-    .getWalks(queryParams)
-    .then(resp => {
-      const mappedData: MappedWalk[] = getMappedData(resp.data);
-      dispatch(setWalks(mappedData));
-      dispatch(setTotalCount(resp.totalCount));
-    })
-    .catch(() => {
-      dispatch(setError('Ошибка'));
-    });
+    dispatch(setWalks(respFromApi.data));
+    dispatch(setTotalCount(respFromApi.totalCount));
+  } catch (err) {
+    dispatch(setError('Ошибка'));
+  }
 
   dispatch(setFetching(false));
 };
@@ -211,39 +168,24 @@ export const incrementPage = (): ThunkAction<
   }
 };
 
-const isInTheRange = (
-  walk: Walk,
-  getState: () => RootState,
-  dispatch: ThunkDispatch<any, any, any>
-) => {
-  const [start, end] = getState().managerReducer.chartRange;
-
-  if (
-    start &&
-    end &&
-    new Date(walk.date).getTime() > start.getTime() &&
-    new Date(walk.date).getTime() < end.getTime()
-  ) {
-    dispatch(getRangedWalks());
-  }
-};
-
-export const handleWalk = (
-  walk: Walk
+export const handleWalkAction = (
+  walk: Walk | CreatedWalk
 ): ThunkAction<void, RootState, unknown, Action<string>> => async (
   dispatch,
   getState
 ) => {
   walk.date = new Date(walk.date).toISOString();
-  if (walk.id) {
-    await api.putWalk(walk, walk.id);
+  if (walk.id !== null) {
+    await api.putWalk(walk);
   } else {
     await api.postWalk(walk);
   }
   dispatch(setSelectedWalk(null));
   dispatch(reInitWalks());
   dispatch(setBadgeMode(false));
-  isInTheRange(walk, getState, dispatch);
+  if (isInTheRange(walk, getState)) {
+    dispatch(getRangedWalks());
+  }
 };
 
 export const removeWalk = (
@@ -258,18 +200,20 @@ export const removeWalk = (
       await api.deleteWalk(id);
       dispatch(reInitWalks());
       dispatch(setBadgeMode(false));
-      isInTheRange(walk, getState, dispatch);
+      if (isInTheRange(walk, getState)) {
+        dispatch(getRangedWalks());
+      }
     }
   }
 };
 
 const setRangedWalks = (walks: Walk[]) => ({
-  type: actionTypes.set_rangedWalks,
+  type: types.set_rangedWalks,
   walks,
 });
 
 const setChartRange = (chartRange: ChartRangeType) => ({
-  type: actionTypes.set_range,
+  type: types.set_range,
   chartRange,
 });
 
@@ -296,6 +240,6 @@ export const getRangedWalks = (): ThunkAction<
     };
 
     const rangedWalks = await api.getRangedWalks(range);
-    dispatch(setRangedWalks(getMappedData(rangedWalks)));
+    dispatch(setRangedWalks(rangedWalks));
   }
 };

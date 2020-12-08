@@ -8,7 +8,7 @@ import {
 } from 'redux';
 import managerReducer from './walkingManager/reducer';
 import thunkMiddleware from 'redux-thunk';
-import { ManagerStateTypes } from './walkingManager/actionTypes';
+import { ManagerStateTypes } from './walkingManager/types';
 
 export type RootState = {
   managerReducer: ManagerStateTypes;

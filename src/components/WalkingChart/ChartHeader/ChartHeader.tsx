@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
-import { ChartRangeType } from '../../../store/walkingManager/actionTypes';
+import { ChartRangeType } from '../../../store/walkingManager/types';
 
 type ChartHeaderProps = {
   range: ChartRangeType;
@@ -63,6 +63,7 @@ const ChartHeader = ({ range, onChangeRange }: ChartHeaderProps) => {
           startDate={startDate}
           endDate={endDate}
           dateFormat={'dd.MM.yyyy'}
+          tillToday
         />
         <CustomDatePicker
           className={'rangePicker'}

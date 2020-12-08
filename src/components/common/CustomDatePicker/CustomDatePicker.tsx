@@ -22,7 +22,7 @@ type StyledDatePickerProps = {
 
 const StyledDatepicker = styled.div<StyledDatePickerProps>`
   label {
-    ${(props) => labelStyle(props.labelColor)}
+    ${props => labelStyle(props.labelColor)}
   }
   .react-datepicker__day--selected {
     background-color: ${({ theme }) => theme.accent};

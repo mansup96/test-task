@@ -1,4 +1,4 @@
-import { MappedWalk } from '../../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../../store/walkingManager/types';
 import { theme } from '../../../../styles';
 import React from 'react';
 
