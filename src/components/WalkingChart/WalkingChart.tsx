@@ -10,15 +10,22 @@ import {
   handleBadgeAction,
 } from '../../store/walkingManager/actions';
 import Chart from './Chart/Chart';
+import { ChartFooter } from './ChartFooter/ChartFooter';
 
 const StyledChart = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   max-width: 809px;
-  padding: 20px;
   margin-left: 20px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.35);
   position: relative;
   min-height: 580px;
+
+  .withPadding {
+    padding: 20px;
+  }
 `;
 
 const WalkingChart = ({
@@ -39,14 +46,17 @@ const WalkingChart = ({
 
   return (
     <StyledChart>
-      <ChartHeader range={range} onChangeRange={changeRangeHandler} />
-      {rangedWalks.length > 0 && (
-        <Chart
-          walks={rangedWalks}
-          handleBadgeAction={handleBadgeAction}
-          setBadgeMode={setBadgeMode}
-        />
-      )}
+      <div className={'withPadding'}>
+        <ChartHeader range={range} onChangeRange={changeRangeHandler} />
+        {rangedWalks.length > 0 && (
+          <Chart
+            walks={rangedWalks}
+            handleBadgeAction={handleBadgeAction}
+            setBadgeMode={setBadgeMode}
+          />
+        )}
+      </div>
+      <ChartFooter walks={rangedWalks} />
     </StyledChart>
   );
 };

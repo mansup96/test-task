@@ -129,6 +129,7 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
             viewBoxWidth,
             tooltipWrapperSize
           )}
+          cursor={false}
           offset={0}
           active={true}
           allowEscapeViewBox={{ x: true, y: true }}
