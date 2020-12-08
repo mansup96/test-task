@@ -48,8 +48,8 @@ const CustomDatePicker = ({
       <label>{label}</label>
       <DatePicker
         disabledKeyboardNavigation
-        {...props}
         filterDate={tillToday ? checkTillToday : undefined}
+        {...props}
         locale={props.locale || 'ru'}
       />
     </StyledDatepicker>

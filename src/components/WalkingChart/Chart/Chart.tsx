@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MappedWalk } from '../../../store/walkingManager/types';
 import {
@@ -54,7 +54,7 @@ const getTooltipPosition = (
 };
 
 const getTicksByDistance = (walks: MappedWalk[]): number[] => {
-  const distances = Array.from(walks, walk => walk.distance);
+  const distances = walks.map(walk => walk.distance);
   const longest = Math.max(...distances);
   const maxTick = longest + (100 - (longest % 100));
   const result: number[] = [];
@@ -65,7 +65,7 @@ const getTicksByDistance = (walks: MappedWalk[]): number[] => {
 };
 
 const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
-  const ticks = useMemo(() => getTicksByDistance(walks), [walks]);
+  const ticks = getTicksByDistance(walks);
 
   const [activeDotCoords, setActiveDotCoords] = useState({
     x: 0,
@@ -77,6 +77,8 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
     height: 0,
     width: 0,
   });
+
+  const [isTooltipActive, setTooltipActive] = useState(true);
 
   const recordViewBoxWidth = (width: number, tooltipWrapperSize: Size) => {
     setTooltipWrapperSize(tooltipWrapperSize);
@@ -106,6 +108,9 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
         data={walks}
         margin={{ left: 0, right: 0 }}
         throttleDelay={100}
+        onMouseLeave={e => {
+          setTooltipActive(false);
+        }}
       >
         <XAxis
           dataKey="localeDate"
@@ -130,10 +135,9 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
             viewBoxWidth,
             tooltipWrapperSize
           )}
+          active={isTooltipActive}
           cursor={false}
           offset={0}
-          active={true}
-          allowEscapeViewBox={{ x: true, y: true }}
           content={<CustomTooltip onChangePosition={recordViewBoxWidth} />}
         />
         <Line

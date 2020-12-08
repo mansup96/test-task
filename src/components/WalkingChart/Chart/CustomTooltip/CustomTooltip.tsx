@@ -61,14 +61,14 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
         ? css`
             box-shadow: 0 10px 6px -8px rgba(0, 0, 0, 0.25);
             transform: rotate(-45deg);
-            left: -18px;
+            left: -17px;
             bottom: -13px;
           `
         : css`
             box-shadow: 0 10px 6px -8px rgba(0, 0, 0, 0.25);
             transform: rotate(45deg);
-            right: -17px;
-            bottom: -13px;
+            right: -18px;
+            bottom: -14px;
           `}
 
     &::after {
@@ -82,13 +82,13 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
        ${({ triangleSide }) =>
          triangleSide === 'left'
            ? css`
-               top: 18px;
+               top: 17px;
                left: 16px;
                box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.25);
              `
            : css`
                top: 17px;
-               left: 14px;
+               left: 13px;
                box-shadow: 3px 0 5px 0 rgba(0, 0, 0, 0.25);
              `}
        }

@@ -5,7 +5,7 @@ import { MappedWalk } from '../../../store/walkingManager/types';
 import Preloader from '../../common/Preloader/Preloader';
 
 const StyledTable = styled.ul`
-  height: 480px;
+  height: 482px;
   overflow: auto;
   list-style-type: none;
   margin: 0;
@@ -109,7 +109,7 @@ const Table = ({
   };
 
   return (
-    <StyledTable id="table">
+    <StyledTable>
       {walks.length > 0 &&
         walks.map((walk, i) => (
           <li
