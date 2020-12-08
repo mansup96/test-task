@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { MappedWalk } from '../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../store/walkingManager/types';
 import {
   CartesianGrid,
   Coordinate,

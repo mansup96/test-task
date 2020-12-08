@@ -1,12 +1,8 @@
-import { MappedWalk } from '../../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../../store/walkingManager/types';
 import { theme } from '../../../../styles';
-import React  from 'react';
+import React from 'react';
 
-
-const CustomizedLabel = (
-  props: any,
-  walks: MappedWalk[],
-) => {
+const CustomizedLabel = (props: any, walks: MappedWalk[]) => {
   const { x, y, index } = props;
 
   const transformedDistance = walks[index].transformedDistance[1];

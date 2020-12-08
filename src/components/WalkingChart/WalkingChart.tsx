@@ -10,6 +10,7 @@ import {
   handleBadgeAction,
 } from '../../store/walkingManager/actions';
 import Chart from './Chart/Chart';
+import { getMappedRangedWalks } from '../../store/walkingManager/selectors';
 
 const StyledChart = styled.div`
   width: 100%;
@@ -53,7 +54,7 @@ const WalkingChart = ({
 
 const mapStateToProps = (state: RootState) => ({
   range: state.managerReducer.chartRange,
-  rangedWalks: state.managerReducer.rangedWalks,
+  rangedWalks: getMappedRangedWalks(state),
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;

@@ -1,4 +1,4 @@
-import { actionTypes, ManagerStateTypes } from './actionTypes';
+import { types, ManagerStateTypes } from './types';
 import { subDays } from 'date-fns';
 
 const initialState: ManagerStateTypes = {
@@ -12,7 +12,7 @@ const initialState: ManagerStateTypes = {
     totalCount: 0,
     page: 1,
   },
-  activeParam: 'date',
+  activeSortParam: 'date',
   badge: {
     selectedWalk: null,
     isOpen: false,
@@ -20,17 +20,17 @@ const initialState: ManagerStateTypes = {
   chartRange: [subDays(new Date(), 7), new Date()],
   rangedWalks: [],
   isFetching: false,
-  errorMsg: null,
+  errorMsg: '',
 };
 
 const reducer = (state = initialState, action: any): ManagerStateTypes => {
   switch (action.type) {
-    case actionTypes.set_active_param:
+    case types.set_active_param:
       return {
         ...state,
-        activeParam: action.param,
+        activeSortParam: action.param,
       };
-    case actionTypes.set_sort_order:
+    case types.set_sort_order:
       return {
         ...state,
         sortParams: {
@@ -40,27 +40,27 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           },
         },
       };
-    case actionTypes.set_walks:
+    case types.set_walks:
       return {
         ...state,
         walks: [...state.walks, ...action.walks],
       };
-    case actionTypes.set_fetching:
+    case types.set_fetching:
       return {
         ...state,
         isFetching: action.value,
       };
-    case actionTypes.set_error:
+    case types.set_error:
       return {
         ...state,
         errorMsg: action.value,
       };
-    case actionTypes.clear_error:
+    case types.clear_error:
       return {
         ...state,
-        errorMsg: null,
+        errorMsg: '',
       };
-    case actionTypes.set_batch_mode:
+    case types.set_batch_mode:
       return {
         ...state,
         badge: {
@@ -68,7 +68,7 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           isOpen: action.isOpen,
         },
       };
-    case actionTypes.set_selected_walk:
+    case types.set_selected_walk:
       return {
         ...state,
         badge: {
@@ -76,7 +76,7 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           selectedWalk: action.walk,
         },
       };
-    case actionTypes.set_total_count:
+    case types.set_total_count:
       return {
         ...state,
         paginationParams: {
@@ -84,7 +84,7 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           totalCount: action.count,
         },
       };
-    case actionTypes.set_page:
+    case types.set_page:
       return {
         ...state,
         paginationParams: {
@@ -92,17 +92,17 @@ const reducer = (state = initialState, action: any): ManagerStateTypes => {
           page: action.page,
         },
       };
-    case actionTypes.clean_walks:
+    case types.clean_walks:
       return {
         ...state,
         walks: [],
       };
-    case actionTypes.set_rangedWalks:
+    case types.set_rangedWalks:
       return {
         ...state,
         rangedWalks: action.walks,
       };
-    case actionTypes.set_range:
+    case types.set_range:
       return {
         ...state,
         chartRange: action.chartRange,

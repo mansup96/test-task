@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import CustomDatePicker from '../../common/CustomDatePicker/CustomDatePicker';
-import { ChartRangeType } from '../../../store/walkingManager/actionTypes';
+import { ChartRangeType } from '../../../store/walkingManager/types';
 
 type ChartHeaderProps = {
   range: ChartRangeType;

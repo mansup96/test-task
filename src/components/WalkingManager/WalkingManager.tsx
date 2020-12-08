@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Button } from '../common/Button/Button';
-import ManagerHeader from './ManagerHeader/ManagerHeader';
 import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../../store';
 import {
   changeWalksOrder,
   changeWalksSort,
   handleBadgeAction,
   setBadgeMode,
-  handleWalk,
+  handleWalkAction,
   removeWalk,
   setPage,
   fetchWalks,
   incrementPage,
 } from '../../store/walkingManager/actions';
+import Button from '../common/Button/Button';
+import ManagerHeader from './ManagerHeader/ManagerHeader';
 import Table from './Table/Table';
 import Badge from './Badge/Badge';
-import { RootState } from '../../store';
+import { getMappedWalks } from '../../store/walkingManager/selectors';
 
 const ManagerWrapper = styled.div`
   width: 335px;
@@ -25,7 +26,21 @@ const ManagerWrapper = styled.div`
   min-height: 580px;
 `;
 
-const WalkingManager = ({ fetchWalks, ...props }: PropsFromRedux) => {
+const WalkingManager = ({
+  sortParams,
+  walks,
+  isFetching,
+  badge,
+  setPage,
+  incrementPage,
+  fetchWalks,
+  setBadgeMode,
+  changeWalksSort,
+  activeSortParam,
+  handleWalkAction,
+  handleBadgeAction,
+  ...props
+}: PropsFromRedux) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -35,35 +50,34 @@ const WalkingManager = ({ fetchWalks, ...props }: PropsFromRedux) => {
   return (
     <ManagerWrapper>
       <ManagerHeader
-        activeParam={props.managerState.activeParam}
-        sortParams={props.managerState.sortParams}
+        activeParam={activeSortParam}
+        sortParams={sortParams}
         onChangeWalksOrder={props.changeWalksOrder}
-        onChangeWalksSort={props.changeWalksSort}
+        onChangeWalksSort={changeWalksSort}
       />
       <Table
-        incrementPage={props.incrementPage}
-        walks={props.managerState.walks}
-        setPage={props.setPage}
-        handleBadgeAction={props.handleBadgeAction}
-        setBadgeMode={props.setBadgeMode}
-        isFetching={props.managerState.isFetching}
-        error={props.managerState.errorMsg}
+        incrementPage={incrementPage}
+        walks={walks}
+        setPage={setPage}
+        handleBadgeAction={handleBadgeAction}
+        setBadgeMode={setBadgeMode}
+        isFetching={isFetching}
       />
       <Badge
-        badge={props.managerState.badge}
+        badge={badge}
         btnRef={buttonRef}
-        setBadgeMode={props.setBadgeMode}
-        handleWalk={props.handleWalk}
+        setBadgeMode={setBadgeMode}
+        handleWalkAction={handleWalkAction}
         removeWalk={props.removeWalk}
       />
       <Button
         ref={buttonRef}
         fullWidth
         onClick={() => {
-          props.setBadgeMode(true);
-          props.handleBadgeAction(null);
+          setBadgeMode(true);
+          handleBadgeAction(null);
         }}
-        disabled={props.managerState.badge.isOpen}
+        disabled={badge.isOpen}
       >
         Добавить запись
       </Button>
@@ -73,6 +87,11 @@ const WalkingManager = ({ fetchWalks, ...props }: PropsFromRedux) => {
 
 const mapStateToProps = (state: RootState) => ({
   managerState: state.managerReducer,
+  activeSortParam: state.managerReducer.activeSortParam,
+  sortParams: state.managerReducer.sortParams,
+  isFetching: state.managerReducer.isFetching,
+  badge: state.managerReducer.badge,
+  walks: getMappedWalks(state),
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -82,7 +101,7 @@ const connector = connect(mapStateToProps, {
   changeWalksOrder,
   handleBadgeAction,
   setBadgeMode,
-  handleWalk,
+  handleWalkAction,
   removeWalk,
   setPage,
   fetchWalks,

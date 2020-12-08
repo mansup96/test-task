@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TooltipProps } from 'recharts';
 import styled, { css } from 'styled-components';
-import { MappedWalk } from '../../../../store/walkingManager/actionTypes';
+import { MappedWalk } from '../../../../store/walkingManager/types';
 
 type ContentWrapperProps = {
   triangleSide?: 'left' | 'right';

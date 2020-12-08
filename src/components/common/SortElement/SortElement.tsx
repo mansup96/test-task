@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import icon from '../../../static/icons/sortBtn--active--rise.svg';
-import { SortOrderType } from '../../../store/walkingManager/actionTypes';
+import { SortOrderType } from '../../../store/walkingManager/types';
 
 type StyledElementProps = {
   isActive: boolean;

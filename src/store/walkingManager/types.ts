@@ -1,5 +1,5 @@
-export const actionTypes = {
-  set_active_param: 'manager/set_active_param',
+export const types = {
+  set_active_param: 'manager/set_active_sort_param',
   set_sort_order: 'manager/set_sort_order',
   set_walks: 'manager/set_walks',
   set_fetching: 'manager/set_fetching',
@@ -14,7 +14,7 @@ export const actionTypes = {
   set_range: 'manager/set_range',
 };
 
-export type ActiveParamType = 'date' | 'distance';
+export type ActiveSortParamType = 'date' | 'distance';
 export type SortOrderType = 'asc' | 'desc';
 export type StateSortParams = {
   date: { order: SortOrderType };
@@ -32,24 +32,30 @@ export type PaginationParamsType = {
 };
 
 export type ManagerStateTypes = {
-  walks: MappedWalk[];
+  walks: Walk[];
   sortParams: StateSortParams;
-  activeParam: ActiveParamType;
+  activeSortParam: ActiveSortParamType;
   paginationParams: PaginationParamsType;
   badge: BadgeType;
   isFetching: boolean;
-  errorMsg: string | null;
+  errorMsg: string;
   chartRange: ChartRangeType;
-  rangedWalks: MappedWalk[];
+  rangedWalks: Walk[];
 };
 
 export type ChartRangeType = [Date | null, Date | null];
 
 export type Walk = {
-  id: number | null;
+  id: number;
   distance: number;
-  date: string | Date;
+  date: string;
 };
+
+export type CreatedWalk = {
+  distance: number;
+  date: string;
+  id: null;
+}
 
 export type MappedWalk = Walk & {
   localeDate: string;

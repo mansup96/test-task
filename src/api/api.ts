@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { SortOrderType, Walk } from '../store/walkingManager/actionTypes';
+import {
+  CreatedWalk,
+  SortOrderType,
+  Walk,
+} from '../store/walkingManager/types';
 import queryString from 'query-string';
 
 let $axios = axios.create({
@@ -30,10 +34,9 @@ export const api = {
     };
   },
 
-  postWalk: async (walk: Walk) => (await $axios.post('/', walk)).data,
+  postWalk: async (walk: CreatedWalk) => (await $axios.post('/', walk)).data,
 
-  putWalk: async (walk: Walk, id: number) =>
-    (await $axios.put(`/${id}`, walk)).data,
+  putWalk: async (walk: Walk) => (await $axios.put(`/${walk.id}`, walk)).data,
 
   deleteWalk: async (id: number) => (await $axios.delete(`/${id}`)).data,
 
