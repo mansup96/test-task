@@ -112,6 +112,7 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
           padding={{ left: 40, right: 40 }}
           tickLine={false}
           tick={{ ...tickStyle, fontSize: 8 }}
+          interval={'preserveStartEnd'}
         />
         <YAxis
           width={35}

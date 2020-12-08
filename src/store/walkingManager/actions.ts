@@ -235,6 +235,8 @@ export const getRangedWalks = (): ThunkAction<
     const range = {
       date_gte: start.toISOString(),
       date_lte: end.toISOString(),
+
+      _limit: '100',
       _sort: 'date',
       _order: 'asc',
     };

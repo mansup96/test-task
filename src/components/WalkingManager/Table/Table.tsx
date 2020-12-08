@@ -103,7 +103,7 @@ const Table = ({
     };
   }, [walks, incrementPage]);
 
-  const handleClick = (id: number | null /*todo: remove null*/) => {
+  const handleClick = (id: number) => {
     handleBadgeAction(id);
     setBadgeMode(true);
   };

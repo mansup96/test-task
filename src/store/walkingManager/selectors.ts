@@ -20,8 +20,7 @@ export const getMappedRangedWalks = createSelector(getRangedWalks, walks => {
 export const getExtremums = createSelector(
   getMappedRangedWalks,
   (walks): string[] => {
-    console.log(walks);
-    const sortedWalks = walks.sort((a, b) => a.distance - b.distance);
+    const sortedWalks = [...walks].sort((a, b) => a.distance - b.distance);
     if (sortedWalks.length > 0) {
       return [
         sortedWalks[0]?.transformedDistance[0],
