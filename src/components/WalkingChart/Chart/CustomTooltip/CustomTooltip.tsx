@@ -14,6 +14,7 @@ export type Size = {
 
 type CustomTooltipProps = TooltipProps & {
   onChangePosition: (width: number, tooltipWrapperSize: Size) => void;
+  isActive?: boolean;
 };
 
 const ContentWrapper = styled.div<ContentWrapperProps>`
@@ -107,12 +108,12 @@ const getTriangleSide = (
 const CustomTooltip = ({
   payload,
   active,
+  isActive, //it prevents reactivation of tooltip by LineChart
   viewBox,
   coordinate,
   onChangePosition,
 }: CustomTooltipProps) => {
   const viewBoxWidth = viewBox?.width;
-
   const wrapper = useRef<HTMLDivElement>(null);
   const { current: divNode } = wrapper;
 
@@ -136,7 +137,7 @@ const CustomTooltip = ({
     }
   }, [viewBoxWidth, onChangePosition, wrapperSize]);
 
-  if (active && payload) {
+  if (active && payload && isActive) {
     const walkInfo: MappedWalk = payload[0].payload;
     return (
       <ContentWrapper

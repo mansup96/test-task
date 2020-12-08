@@ -110,20 +110,19 @@ const Table = ({
 
   return (
     <StyledTable>
-      {walks.length > 0 &&
-        walks.map((walk, i) => (
-          <li
-            key={walk.id}
-            onClick={() => handleClick(walk.id)}
-            ref={i === walks.length - 1 ? lastListItem : null}
-          >
-            <div className="dateWrapper">
-              <span className="day">{walk.localeDay}</span>
-              <span className="date">{walk.localeDate}</span>
-            </div>
-            <span className="distance">{walk.transformedDistance[0]}</span>
-          </li>
-        ))}
+      {walks.map((walk, i) => (
+        <li
+          key={walk.id}
+          onClick={() => handleClick(walk.id)}
+          ref={i === walks.length - 1 ? lastListItem : null}
+        >
+          <div className="dateWrapper">
+            <span className="day">{walk.localeDay}</span>
+            <span className="date">{walk.localeDate}</span>
+          </div>
+          <span className="distance">{walk.transformedDistance[0]}</span>
+        </li>
+      ))}
       {isFetching && <Preloader />}
       {!isFetching && walks.length === 0 && (
         <span className={'info'}>Список пуст</span>

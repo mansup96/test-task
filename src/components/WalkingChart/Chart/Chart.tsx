@@ -101,16 +101,20 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
   };
 
   return (
-    <ChartWrapper>
+    <ChartWrapper
+      onMouseOver={() => {
+        setTooltipActive(true);
+      }}
+      onMouseOut={() => {
+        setTooltipActive(false);
+      }}
+    >
       <LineChart
         width={768}
         height={300}
         data={walks}
         margin={{ left: 0, right: 0 }}
-        throttleDelay={100}
-        onMouseLeave={e => {
-          setTooltipActive(false);
-        }}
+        throttleDelay={200}
       >
         <XAxis
           dataKey="localeDate"
@@ -135,10 +139,14 @@ const Chart = ({ walks, setBadgeMode, handleBadgeAction }: ChartProps) => {
             viewBoxWidth,
             tooltipWrapperSize
           )}
-          active={isTooltipActive}
           cursor={false}
           offset={0}
-          content={<CustomTooltip onChangePosition={recordViewBoxWidth} />}
+          content={
+            <CustomTooltip
+              isActive={isTooltipActive}
+              onChangePosition={recordViewBoxWidth}
+            />
+          }
         />
         <Line
           dataKey="distance"
