@@ -20,4 +20,4 @@ If you prefer to use your own API server just edit `apiUrl` in the ***base.confi
 
 ---
 
-[Here](https://github.com/itrevolution-perm/test-task-frontend) you can get requirements to this task. 
+[Here](https://github.com/itrevolution-perm/test-task-frontend) you can get requirements for this task. 
