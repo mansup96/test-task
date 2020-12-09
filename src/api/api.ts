@@ -5,9 +5,10 @@ import {
   Walk,
 } from '../store/walkingManager/types';
 import queryString from 'query-string';
+import config from '../../base.config';
 
 let $axios = axios.create({
-  baseURL: 'http://localhost:3333/walking',
+  baseURL: `${config.apiUrl}/walking`,
 });
 
 type GetWalksResponseType = {
