@@ -5,7 +5,7 @@ import {
   Walk,
 } from '../store/walkingManager/types';
 import queryString from 'query-string';
-import config from '../../base.config';
+import config from '../base.config';
 
 let $axios = axios.create({
   baseURL: `${config.apiUrl}/walking`,
