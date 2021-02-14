@@ -5,10 +5,11 @@ import {
   Walk,
 } from '../store/walkingManager/types';
 import queryString from 'query-string';
-import config from '../base.config';
+
+const apiUrl = process.env.REACT_APP_API_URL
 
 let $axios = axios.create({
-  baseURL: `${config.apiUrl}/walking`,
+  baseURL: `${apiUrl}/walking`,
 });
 
 type GetWalksResponseType = {
