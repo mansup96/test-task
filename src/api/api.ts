@@ -6,7 +6,10 @@ import {
 } from '../store/walkingManager/types';
 import queryString from 'query-string';
 
-const apiUrl = process.env.REACT_APP_API_URL
+const apiUrl =
+  process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_DEV_API_URL
+    : process.env.REACT_APP_PROD_API_URL;
 
 let $axios = axios.create({
   baseURL: `${apiUrl}/walking`,
